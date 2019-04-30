@@ -1,4 +1,11 @@
-Triangle = function (game) {
+Triangles = function (game, x, y, key, frame) {
+
+	Phaser.Sprite.call(this, game, x, y, key, frame);
+
+	this.anchor.set(0.5);
+
+	game.physics.enable(this);
+	this.body.collideWorldBounds = true;
 
 };
 
