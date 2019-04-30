@@ -5,7 +5,7 @@ MainMenu.prototype = {
 	preload: function() {
 
 		//load in all of the assets
-
+		//game.load.image('temp', 'assets/img/placeholder.png');
 
 	},
 
