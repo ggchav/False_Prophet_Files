@@ -17,29 +17,22 @@ Player.prototype.update = function() {
 	this.body.velocity.x = 0;
 	this.body.velocity.y = 0;
 
-	if(game.input.keyboard.isDown(Phaser.Keyboard.W)){
-		this.body.velocity.y = -300;
-		if(game.input.keyboard.isDown(Phaser.Keyboard.D)){
-			this.body.velocity.x = 300;
+	if((game.input.keyboard.isDown(Phaser.Keyboard.W) && !(game.input.keyboard.isDown(Phaser.Keyboard.S))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.W)) && game.input.keyboard.isDown(Phaser.Keyboard.S))){
+		if(game.input.keyboard.isDown(Phaser.Keyboard.W)){
+			this.body.velocity.y = -300;
 		}
-		else if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
+		else{
+			this.body.velocity.y = 300;
+		}
+	}
+
+	if((game.input.keyboard.isDown(Phaser.Keyboard.A) && !(game.input.keyboard.isDown(Phaser.Keyboard.D))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.A)) && game.input.keyboard.isDown(Phaser.Keyboard.D))){
+		if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
 			this.body.velocity.x = -300;
 		}
-	}
-	else if(game.input.keyboard.isDown(Phaser.Keyboard.S)){
-		this.body.velocity.y = 300;
-		if(game.input.keyboard.isDown(Phaser.Keyboard.D)){
+		else{
 			this.body.velocity.x = 300;
 		}
-		else if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
-			this.body.velocity.x = -300;
-		}
-	}
-	else if(game.input.keyboard.isDown(Phaser.Keyboard.D)){
-		this.body.velocity.x = 300;
-	}
-	else if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
-		this.body.velocity.x = -300;
 	}
 
 }
