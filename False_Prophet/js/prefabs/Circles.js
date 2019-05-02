@@ -1,11 +1,13 @@
-Circles = function (game, x, y, key, frame) {
+Circles = function (game, x, y) {
 
-	Phaser.Sprite.call(this, game, x, y, key, frame);
+	Phaser.Sprite.call(this, game, x, y, 'temp');
 
 	this.anchor.set(0.5);
 
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
+
+	game.add.existing(this);
 
 };
 
