@@ -6,7 +6,7 @@ Triangles = function (game, x, y) {
 
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
-
+	
 	game.add.existing(this);
 
 };
