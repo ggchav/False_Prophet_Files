@@ -5,7 +5,17 @@ MainMenu.prototype = {
 	preload: function() {
 
 		//load in all of the assets
-		game.load.image('temp', 'assets/img/placeholder.png');
+		game.load.path = 'assets/img/';
+
+		game.load.image('x', 'playerx.png');
+		game.load.image('barrier', 'barrier.png');
+		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
+		game.load.image('triangle', 'triangle0.png');
+		game.load.image('circle', 'circle0.png');
+		game.load.image('square', 'square0.png');
+		
+		// load audio assets
+		game.load.path = 'assets/audio/';
 
 	},
 
