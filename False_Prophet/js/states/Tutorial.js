@@ -1,9 +1,11 @@
-	var player;
-	var triangle = [];
-	var square= [];
-	var circle= [];
-	var shapeGroup;
+var player;
+var triangle = [];
+var square= [];
+var circle= [];
+var shapeGroup;
+
 var Tutorial = function(game){};
+
 Tutorial.prototype = {
 	create: function() {
 		shapeGroup = game.add.group();
