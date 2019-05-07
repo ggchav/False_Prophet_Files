@@ -4,8 +4,6 @@ Enemy = function (game, x, y, type) {
 
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet', type+0);
 
-	this.anchor.set(0.5);
-
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
 	this.animations.add("triangle",[3,4,5], 10, true, true);
@@ -13,9 +11,11 @@ Enemy = function (game, x, y, type) {
 	this.animations.add("circle",[6,7,8], 10, true, true);
 
 	this.animations.play(type);
-	this.anchor.set(0.5);
 	this.scale.x *=.35;
 	this.scale.y *=.35;
+	this.body.setSize(200, 200);
+
+	this.anchor.set(0.5);
 	
 	this.body.collideWorldBounds = true;
 

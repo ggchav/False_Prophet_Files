@@ -21,6 +21,7 @@ MainMenu.prototype = {
 		//creates text for the the mainmenu with controls and a propt to start the game
 		var menuLabel = game.add.text(480, 100, 'Main Menu', {font: '50px Arial', fill: '#ffffff'});
 		var controlsLabel = game.add.text(430, 300, 'Use the W, A, S, D keys to move', {font: '25px Arial', fill: '#ffffff'});
+		var controlsLabel = game.add.text(420, 400, 'Use the 1, 2, 3 keys to shape shift', {font: '25px Arial', fill: '#ffffff'});
 		var startLabel = game.add.text(470, 500, 'Press the W key to begin', {font: '25px Arial', fill: '#ffffff'});
 
 		//adds the W key as an input
