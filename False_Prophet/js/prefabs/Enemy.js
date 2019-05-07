@@ -1,6 +1,6 @@
 var type = 0;
 
-Enemy = function (game, x, y,type) {
+Enemy = function (game, x, y, type) {
 
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet', type+0);
 
