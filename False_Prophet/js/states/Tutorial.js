@@ -29,11 +29,20 @@ Tutorial.prototype = {
 
 	},
 	update: function() {
-		var hit = game.physics.arcade.collide(player, shapeGroup);
+		//For seperating similar shapes
 		game.physics.arcade.collide(triangle, triangle);
 		game.physics.arcade.collide(circle, circle);
 		game.physics.arcade.collide(square, square);
-		//follows the player, keeping a distance
+
+		//For when an opposing shapes contact eachother
+		game.physics.arcade.overlap(triangle, square, this.killShape, null, this);
+		game.physics.arcade.overlap(square, circle, this.killShape, null, this);
+		game.physics.arcade.overlap(circle, triangle, this.killShape, null, this);
+
+		//For when a shape comes into contact with a player
+		game.physics.arcade.overlap(shapeGroup, player, this.killPlayer, null, this);
+
+		//Follows though the different shape/player interactions
 		this.shapeMovement(triangle, 0, 1, 2);
 		this.shapeMovement(circle, 1, 2, 0);
 		this.shapeMovement(square, 2, 0, 1);
@@ -97,5 +106,13 @@ Tutorial.prototype = {
 				enemy.body.velocity.y = 0;
 			}
        	});
+	},
+	killShape: function(strong, weak){
+		weak.kill();
+	},
+	killPlayer: function(shapes, player){
+		player.kill();
+
+		game.state.start('Tutorial');
 	}
 }
