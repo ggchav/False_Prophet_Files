@@ -34,9 +34,9 @@ Tutorial.prototype = {
 		game.physics.arcade.collide(circle, circle);
 		game.physics.arcade.collide(square, square);
 		//follows the player, keeping a distance
-		this.shapeMovement(triangle, 1, 2);
-		this.shapeMovement(circle, 2, 0);
-		this.shapeMovement(square, 0, 1);
+		this.shapeMovement(triangle, 0, 1, 2);
+		this.shapeMovement(circle, 1, 2, 0);
+		this.shapeMovement(square, 2, 0, 1);
 
 		/*
 		if (!game.camera.atLimit.x){
@@ -48,12 +48,12 @@ Tutorial.prototype = {
 		}
 		*/
 	},
-	shapeMovement: function(type, weak, strong){
+	shapeMovement: function(type, same, weak, strong){
 		type.forEach(function(enemy){
-       		if (player.shapeType() == type){
+       		if (player.shapeType() == same){
 				//console.log("We are the same!");
 				//console.log("enemy shape type: "+ enemy.shapeType() + "  playertype: "+ player.shapeType())
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 300 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 250 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
 					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
 				}
 				else{
@@ -61,20 +61,20 @@ Tutorial.prototype = {
 					enemy.body.velocity.y = 0;
 				}
 			}
-			if (player.shapeType() == weak){
+			else if (player.shapeType() == weak){
 				//console.log("Run Away!");
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 300){
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 250){
 					if(player.body.x < enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y + 200, 100, 700);
+						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y + 200, 100, 800);
 					}
 					else if(player.body.x < enemy.body.x && player.body.y > enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y - 200, 100, 700);
+						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y - 200, 100, 800);
 					}
 					else if(player.body.x > enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y + 200, 100, 700);
+						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y + 200, 100, 800);
 					}
 					else {
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y - 200, 100, 700);
+						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y - 200, 100, 800);
 					}
 				}
 				else{
@@ -82,15 +82,19 @@ Tutorial.prototype = {
 					enemy.body.velocity.y = 0;
 				}
 			}
-			if (player.shapeType() == strong){
+			else if (player.shapeType() == strong){
 				//console.log("Attack!");
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 300 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 70){
-					game.physics.arcade.moveToObject(enemy, player, 240);
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 250 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 70){
+					game.physics.arcade.moveToObject(enemy, player, 150);
 				}
 				else{
 					enemy.body.velocity.x = 0;
 					enemy.body.velocity.y = 0;
 				}
+			}
+			else{
+				enemy.body.velocity.x = 0;
+				enemy.body.velocity.y = 0;
 			}
        	});
 	}

@@ -2,7 +2,7 @@ var shapeType = 0;
 
 Player = function (game, x, y){
 	
-	Phaser.Sprite.call(this, game, x, y, 'spritesheet', 'triangle');
+	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 
 	game.physics.enable(this);
 	game.physics.arcade.enable(this);
