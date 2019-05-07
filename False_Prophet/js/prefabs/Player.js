@@ -1,10 +1,8 @@
-var shapeType=0;
+var shapeType = 0;
 
 Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet', 'triangle');
-
-	this.anchor.set(0.5);
 
 	game.physics.enable(this);
 	game.physics.arcade.enable(this);
@@ -15,9 +13,11 @@ Player = function (game, x, y){
 	this.animations.add("circle",[6,7,8], 10, true, true);
 
 	this.animations.play("triangle");
-	this.anchor.set(0.5);
 	this.scale.x *=.35;
 	this.scale.y *=.35;
+	this.body.setSize(200, 200);
+
+	this.anchor.set(0.5);
 	
 	this.body.collideWorldBounds = true;
 
@@ -53,26 +53,23 @@ Player.prototype.update = function() {
 			this.body.velocity.x = 300;
 		}
 	}
-	var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-	if(spaceKey.justDown){
-		//this.changeShape(); will make into function later
-		shapeType++;
-		if (shapeType > 2){
-			shapeType = 0;
-		}
-		if (shapeType == 0){
-			
+
+	if(game.input.keyboard.isDown(Phaser.Keyboard.ONE)){
 			this.animations.play('triangle');
-			this.tint = Phaser.Color.YELLOW;	
-		}
-		if (shapeType == 1){
-			this.animations.play("square");
-			this.tint = Phaser.Color.RED;
-		}
-		if (shapeType == 2) {
+			this.tint = Phaser.Color.YELLOW;
+			shapeType = 0;
+	}
+
+	else if(game.input.keyboard.isDown(Phaser.Keyboard.TWO)){
 			this.animations.play('circle');
+			this.tint = Phaser.Color.RED;
+			shapeType = 1;	
+	}
+
+	else if(game.input.keyboard.isDown(Phaser.Keyboard.THREE)){
+			this.animations.play('square');
 			this.tint = Phaser.Color.BLUE;
-		}
+			shapeType = 2;
 	}
 
 }
