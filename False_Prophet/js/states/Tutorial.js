@@ -71,6 +71,8 @@ Tutorial.prototype = {
 		//repeat for the provided shape
 		type.forEach(function(enemy){
 
+			var fleeSpeed = 100;
+
 			//shape follows the player if the are the same shape, never getting too close
        		if (player.shapeType() == same){
 				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 250 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
@@ -85,18 +87,31 @@ Tutorial.prototype = {
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
 				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 300){
-					if(player.body.x < enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y + 200, 100, 700);
+					//changes fleespeed if closer to the player
+					if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 150){
+						fleeSpeed = 180;
 					}
-					else if(player.body.x < enemy.body.x && player.body.y > enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y - 200, 100, 700);
+
+					//moves the enemy appropriately
+					if(player.body.x + 35 < enemy.body.x){
+						enemy.body.velocity.x = fleeSpeed;
 					}
-					else if(player.body.x > enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y + 200, 100, 700);
+					else if(player.body.x -35 > enemy.body.x){
+						enemy.body.velocity.x = -1 * fleeSpeed;
 					}
-					else {
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y - 200, 100, 700);
+					else{
+						enemy.body.velocity.x = 0;
 					}
+					if(player.body.y + 35 < enemy.body.y){
+						enemy.body.velocity.y = fleeSpeed;
+					}
+					else if(player.body.y -35 > enemy.body.y){
+						enemy.body.velocity.y = -1 * fleeSpeed;
+					}
+					else{
+						enemy.body.velocity.y = 0;
+					}
+
 				}
 				else{
 					enemy.body.velocity.x = 0;
