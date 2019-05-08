@@ -15,15 +15,15 @@ Tutorial.prototype = {
 		shapeGroup = game.add.group();
 		shapeGroup.enableBody = true;
 
-		player = new Player(game, 450, 250);
+		player = new Player(game, 300, 865);
 
 		background.fixedToCamera = true;
 		game.camera.follow(player);
 
 		for (i=0; i<4;i++){
-			triangle[i] = new Enemy(game, i*110, 15, 'triangle');
-			circle[i] = new Enemy(game, 700+ i*110, 15, 'circle');
-			square[i] = new Enemy(game, 600+ i*110, 550, 'square');
+			triangle[i] = new Enemy(game, 1000 + i*110, 500, 'triangle');
+			circle[i] = new Enemy(game, 1500 + i*110, 900, 'circle');
+			square[i] = new Enemy(game, 1000 + i*110, 1300, 'square');
 			shapeGroup.add(triangle[i]);
 			shapeGroup.add(circle[i]);
 			shapeGroup.add(square[i]);
@@ -76,16 +76,16 @@ Tutorial.prototype = {
 				//console.log("Run Away!");
 				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 300){
 					if(player.body.x < enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y + 200, 100, 800);
+						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y + 200, 100, 700);
 					}
 					else if(player.body.x < enemy.body.x && player.body.y > enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y - 200, 100, 800);
+						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y - 200, 100, 700);
 					}
 					else if(player.body.x > enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y + 200, 100, 800);
+						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y + 200, 100, 700);
 					}
 					else {
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y - 200, 100, 800);
+						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y - 200, 100, 700);
 					}
 				}
 				else{

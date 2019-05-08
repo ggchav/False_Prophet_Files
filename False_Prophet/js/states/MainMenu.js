@@ -8,7 +8,7 @@ MainMenu.prototype = {
 		game.load.path = 'assets/img/';
 
 		game.load.image('x', 'playerx.png');
-		game.load.image('background', 'TempBackground.png');
+		game.load.image('background', 'tempbackground.png');
 		game.load.image('barrier', 'barrier.png');
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
 		
