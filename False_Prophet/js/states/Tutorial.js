@@ -8,15 +8,17 @@ var Tutorial = function(game){};
 
 Tutorial.prototype = {
 	create: function() {
-		//game.world.setBounds(0, 0, 3000, 1500);
+		game.world.setBounds(0, 0, 3600, 1800);
+
+		background = game.add.tileSprite(0, 0, 1200, 600, 'background');
 
 		shapeGroup = game.add.group();
 		shapeGroup.enableBody = true;
 
 		player = new Player(game, 450, 250);
 
-		//tilesprite.fixedToCamera = true;
-		//game.camera.follow(player);
+		background.fixedToCamera = true;
+		game.camera.follow(player);
 
 		for (i=0; i<4;i++){
 			triangle[i] = new Enemy(game, i*110, 15, 'triangle');
@@ -47,15 +49,15 @@ Tutorial.prototype = {
 		this.shapeMovement(circle, 1, 2, 0);
 		this.shapeMovement(square, 2, 0, 1);
 
-		/*
+		
 		if (!game.camera.atLimit.x){
-        	tilesheet.tilePosition.x -= (player.body.velocity.x * game.time.physicsElapsed);
+        	background.tilePosition.x -= (player.body.velocity.x * game.time.physicsElapsed);
 		}
 
 		if (!game.camera.atLimit.y){
-        	tilesheet.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
+        	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
 		}
-		*/
+		
 	},
 	shapeMovement: function(type, same, weak, strong){
 		type.forEach(function(enemy){
@@ -72,7 +74,7 @@ Tutorial.prototype = {
 			}
 			else if (player.shapeType() == weak){
 				//console.log("Run Away!");
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 250){
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 300){
 					if(player.body.x < enemy.body.x && player.body.y < enemy.body.y){
 						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y + 200, 100, 800);
 					}
