@@ -3,11 +3,12 @@ var shapeType = 'triangle';
 Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
-	
+
+
 	//enables physics and colliding on the world bounds
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
-	
+
 	//adds in the three types of shape animations
 	this.animations.add("triangle",[3,4,5], 10, true, true);
 	this.animations.add("square",[0,1,2], 10, true, true);
@@ -15,7 +16,7 @@ Player = function (game, x, y){
 
 	//change to the x player later
 	this.animations.play("triangle");
-	shapeType = 'triangle';
+
 	//sets to correct size with correct bounds
 	this.scale.x *=.35;
 	this.scale.y *=.35;
@@ -66,7 +67,8 @@ Player.prototype.update = function() {
 			shapeType = 'triangle';
 	}
 	else if(game.input.keyboard.isDown(Phaser.Keyboard.K)){
-			this.animations.play('circle'); this.tint = Phaser.Color.RED;
+			this.animations.play('circle');
+			this.tint = Phaser.Color.RED;
 			shapeType = 'circle';	
 	}
 	else if(game.input.keyboard.isDown(Phaser.Keyboard.L)){

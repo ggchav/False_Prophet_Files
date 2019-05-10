@@ -19,14 +19,8 @@ Tutorial.prototype = {
 		shapeGroup = game.add.group();
 		shapeGroup.enableBody = true;
 
-		triangleGroup = game.add.group(shapeGroup);
-		squareGroup = game.add.group(shapeGroup);
-		circleGroup = game.add.group(shapeGroup);
-
 		//create the player from the prefab
 		player = new Player(game, 300, 865);
-
-		player.destroyed = false;
 
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
@@ -45,9 +39,8 @@ Tutorial.prototype = {
 	},
 
 	update: function() {
-		// checks if player is destroyed before running these
+	// checks if player is destroyed before running these
 		if (!player.destroyed){
-
 			//for when a shape comes into contact with a player
 			game.physics.arcade.overlap(shapeGroup, player, this.killPlayer, null, this);
 
@@ -62,8 +55,6 @@ Tutorial.prototype = {
 		game.physics.arcade.collide(square, square);
 
 		//for when an opposing shapes contact eachother
-		//game.physics.arcade.overlap(Enemy, Enemy, this.killShape, null, this);
-
 		game.physics.arcade.overlap(triangle, square, this.killShape, null, this);
 		game.physics.arcade.overlap(square, circle, this.killShape, null, this);
 		game.physics.arcade.overlap(circle, triangle, this.killShape, null, this);
@@ -82,9 +73,11 @@ Tutorial.prototype = {
 		//repeat for the provided shape
 		type.forEach(function(enemy){
 
+			var fleeSpeed = 100;
+			var sightRange = 300;
 			//shape follows the player if the are the same shape, never getting too close
        		if (player.shapeType() == same){
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 350 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
 					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
 				}
 				else{
@@ -95,19 +88,32 @@ Tutorial.prototype = {
 
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 300){
-					if(player.body.x < enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y + 200, 100, 700);
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange){
+					//changes fleespeed if closer to the player
+					if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 150){
+						fleeSpeed = 180;
 					}
-					else if(player.body.x < enemy.body.x && player.body.y > enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x + 200, player.body.y - 200, 100, 700);
+
+					//moves the enemy appropriately
+					if(player.body.x + 35 < enemy.body.x){
+						enemy.body.velocity.x = fleeSpeed;
 					}
-					else if(player.body.x > enemy.body.x && player.body.y < enemy.body.y){
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y + 200, 100, 700);
+					else if(player.body.x -35 > enemy.body.x){
+						enemy.body.velocity.x = -1 * fleeSpeed;
 					}
-					else {
-						game.physics.arcade.moveToXY(enemy, player.body.x - 200, player.body.y - 200, 100, 700);
+					else{
+						enemy.body.velocity.x = 0;
 					}
+					if(player.body.y + 35 < enemy.body.y){
+						enemy.body.velocity.y = fleeSpeed;
+					}
+					else if(player.body.y -35 > enemy.body.y){
+						enemy.body.velocity.y = -1 * fleeSpeed;
+					}
+					else{
+						enemy.body.velocity.y = 0;
+					}
+
 				}
 				else{
 					enemy.body.velocity.x = 0;
@@ -118,7 +124,7 @@ Tutorial.prototype = {
 			//shape runs at the player, wanting to collide with the player
 			else if (player.shapeType() == strong){
 				//console.log("Attack!");
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 350 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 70){
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 250 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 70){
 					game.physics.arcade.moveToObject(enemy, player, 150);
 				}
 				else{
@@ -134,11 +140,10 @@ Tutorial.prototype = {
 			}
        	});
 	},
-
 	killShape: function(strong, weak){
 		//kills shapes when they collide
-		console.log("weaktype:" + weak.shapeType());
-		this.createParticles(weak);
+		//createParticles throws an error when passed anything but the player for unknown reasons
+		//this.createParticles(weak);
 		weak.kill();
 	},
 	createParticles: function(shape){
@@ -162,8 +167,7 @@ Tutorial.prototype = {
 		player.animations.stop();
 		player.destroyed = true;
 		player.kill();
-		//restarts the level
+		//restarts the level after we see the particle explosion of the player
 		game.time.events.add(Phaser.Timer.SECOND * 2, function() { game.state.start('Tutorial')});
 	}
-
 }
