@@ -4,7 +4,7 @@ var square= [];
 var circle= [];
 //audio array for each sound type
 var flee = new Array();
-var attack = new Array();
+var anger = new Array();
 var follow = new Array();
 
 //var channel_max = 8;	
@@ -20,12 +20,11 @@ Tutorial.prototype = {
 		//set the bounds of the level
 		game.world.setBounds(0, 0, 3600, 1800);
 		//load sounds into an array
-
 		for (i = 1; i < 6; i++){
 			 flee[i-1] = game.add.audio("flee"+i);
 		}
 		for (i = 1; i < 6; i++){
-			 attack[i-1] = game.add.audio("attack"+i);
+			 anger[i-1] = game.add.audio("anger"+i);
 		}
 		for (i = 1; i < 6; i++){
 			 follow[i-1] = game.add.audio("follow"+i);
@@ -92,7 +91,7 @@ Tutorial.prototype = {
 			//how quickly a shape runs away
 			var fleeSpeed = 100;
 			//how quickly a shape runs toward the player aggresively
-			var attackSpeed = 200;
+			var angerSpeed = 200;
 			//how close a shape has to be to "see" the player shape and react
 			var sightRange = 500;
 			//the approximate proximity following shapes will go before they stop moving toward player
@@ -104,16 +103,44 @@ Tutorial.prototype = {
 			//variable to set volume to play sound effect at, increases value with proximity
 			var soundVol = (sightRange - playerShapeDist) /1000;
 			if (soundVol > .6){
-				soundVol = .6;
+					soundVol = .6;
+				}
+			// defined function shapeSound inside here, because it's only used here and I couldn't find an easy way to access it from inside the enemy foreach loop
+			function shapeSound(typeArray){
+				//how many sounds that can play at once of this type
+				var maxSounds = 2;
+				//bool flag that prevents tons of sounds from playing at once
+				var maxPlaying = false;
+				//counts the sounds playing to track maxSound limit
+				var counter = 0;
+				var rng = Math.floor(Math.random()*5);
+				for (i=0; i<5; i++){
+					if (typeArray[i].isPlaying == true){
+						counter ++;
+						//tween sound to not abruptly adjust to the distance the shape is from player
+						game.add.tween(flee[i].volume).to({volume:soundVol}, 500).start();
+					}
+				}
+				//only play sound if max amount of audio isn't playing using maxPlaying bool 
+				if (counter >= maxSounds){
+					maxPlaying = true;
+				}
+				if (!maxPlaying){
+					typeArray[rng].play(null, 0,soundVol,false,false);
+				}	
 			}
-			//shapesightRange will be the max distance shapes will attack other shapes
+			//shapesightRange will be the max distance shapes will anger other shapes
 			//not implemented yet
 			//var	shapeSightRange = 150;
 			//shape follows the player if the are the same shape, never getting too close
        		if (player.shapeType() == same){
-				if(shapeCanSeePlayer && playerShapeDist >= 120){
-					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
-				}
+       			if (shapeCanSeePlayer){
+       				shapeSound(follow);
+       				if (playerShapeDist >= 120){
+       					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
+       				}
+       			}
+
 				else{
 					enemy.body.velocity.x = 0;
 					enemy.body.velocity.y = 0;
@@ -122,26 +149,8 @@ Tutorial.prototype = {
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
 				if(shapeCanSeePlayer){
-					//how many sounds that can play at once of this type
-					var maxSounds = 2;
-					//bool flag that prevents tons of sounds from playing at once
-					var maxPlaying = false;
-					//counts the sounds playing to track maxSound limit
-					var counter = 0;
-					var rng = Math.floor(Math.random()*5);
-					for (i=0; i<5; i++){
-						if (flee[i].isPlaying == true){
-							counter ++;
-							//tween sound to not abruptly adjust to the distance the shape is from player
-							game.add.tween(flee[i].volume).to({volume:soundVol}, 500).start();
-						}
-					}
-					if (counter >= maxSounds){
-							maxPlaying = true;
-					}
-					if (!maxPlaying){
-						flee[rng].play(null, 0,soundVol,false,false);
-					}
+				
+       				shapeSound(flee);
 					//changes fleespeed if closer to the player
 					if(playerShapeDist <= 150){
 						fleeSpeed = fleeSpeed * 1.8;
@@ -175,7 +184,8 @@ Tutorial.prototype = {
 			//shape runs at the player, wanting to collide with the player
 			else if (player.shapeType() == strong){
 				if(shapeCanSeePlayer){
-					game.physics.arcade.moveToObject(enemy, player, attackSpeed);
+					shapeSound(anger);
+					game.physics.arcade.moveToObject(enemy, player, angerSpeed);
 				}
 				else{
 					enemy.body.velocity.x = 0;
@@ -196,34 +206,6 @@ Tutorial.prototype = {
 		//this.createParticles(weak);
 		weak.kill();
 	},
-	/*
-	playSound: function(type){
-		var createdChannel = false;
-		//for loop that goes through each of the audio channels established in the array earlier.
-		//if a channel is finished, it loads a new sound and plays it back in that channel
-		for (a=0; a<audiochannels.length; a++) {
-				thistime = new Date();
-				var channel = audiochannels[a]['channel'];
-				var soundSrc = document.getElementById(sound).src;
-				if (audiochannels[a]['finished'] < thistime.getTime() && !createdChannel) {			// is this channel finished?
-					audiochannels[a]['finished'] = thistime.getTime() + document.getElementById(sound).duration*2000;
-					channel = document.getElementById(sound);
-					channel.load();
-					channel.playbackRate = playSpeed;
-					channel.loop = false;
-					channel.play();
-					//createdChannel boolean tells the loop to stop adding more sounds in continued iterations of the for loop
-					createdChannel = true;
-				}
-				//checks if the same sound is currently playing in another channel, if so it stops it
-				if (soundSrc == channel.src && channel.currentTime > 0){
-					console.log("stop attempting to run");
-					channel.pause();
-					channel.currentTime = 0;
-				}				
-		}
-
-	}*/
 	createParticles: function(shape){
 		//kills shapes when they collide
 		var deathEmitter = game.add.emitter(shape.x, shape.y, 100);
@@ -239,6 +221,7 @@ Tutorial.prototype = {
 		//loop through each particle and change it's tint to the color of the player's tint at time of death.
 		deathEmitter.forEach(function(item){item.tint = shape.tint;});
 	},
+	
 	killPlayer: function(shapes, playershape){
 		//kills the player when collided with any shape
 		this.createParticles(player);
