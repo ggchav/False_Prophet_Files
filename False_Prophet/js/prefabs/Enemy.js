@@ -17,8 +17,8 @@ Enemy = function (game, x, y, type) {
 	this.animations.play(type);
 
 	//sets to correct size with correct bounds
-	this.scale.x *=.35;
-	this.scale.y *=.35;
+	this.scale.x *=.22;
+	this.scale.y *=.22;
 	this.body.setSize(200, 200);
 
 	//moves the anchor point to the middle

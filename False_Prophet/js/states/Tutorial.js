@@ -74,7 +74,10 @@ Tutorial.prototype = {
 		type.forEach(function(enemy){
 
 			var fleeSpeed = 100;
-			var sightRange = 300;
+			var sightRange = 400;
+			//shapesightRange will be the max distance shapes will attack other shapes
+			//not implemented yet
+			//var	shapeSightRange = 150;
 			//shape follows the player if the are the same shape, never getting too close
        		if (player.shapeType() == same){
 				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
@@ -124,7 +127,7 @@ Tutorial.prototype = {
 			//shape runs at the player, wanting to collide with the player
 			else if (player.shapeType() == strong){
 				//console.log("Attack!");
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 250 && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 70){
+				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 40){
 					game.physics.arcade.moveToObject(enemy, player, 150);
 				}
 				else{

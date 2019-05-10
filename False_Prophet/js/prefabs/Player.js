@@ -16,6 +16,7 @@ Player = function (game, x, y){
 
 	//change to the x player later
 	this.animations.play("triangle");
+	this.tint = Phaser.Color.YELLOW;
 
 	//sets to correct size with correct bounds
 	this.scale.x *=.35;
@@ -37,44 +38,43 @@ Player.prototype.shapeType = function(){
 	return shapeType;
 }
 Player.prototype.update = function() {
-
 	//initialize the player movement if not moving
 	this.body.velocity.x = 0;
 	this.body.velocity.y = 0;
-
+	if (!player.destroyed){
 	//Adds functionality for WASD movement
-	if((game.input.keyboard.isDown(Phaser.Keyboard.W) && !(game.input.keyboard.isDown(Phaser.Keyboard.S))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.W)) && game.input.keyboard.isDown(Phaser.Keyboard.S))){
-		if(game.input.keyboard.isDown(Phaser.Keyboard.W)){
-			this.body.velocity.y = -300;
+		if((game.input.keyboard.isDown(Phaser.Keyboard.W) && !(game.input.keyboard.isDown(Phaser.Keyboard.S))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.W)) && game.input.keyboard.isDown(Phaser.Keyboard.S))){
+			if(game.input.keyboard.isDown(Phaser.Keyboard.W)){
+				this.body.velocity.y = -300;
+			}
+			else{
+				this.body.velocity.y = 300;
+			}
 		}
-		else{
-			this.body.velocity.y = 300;
+		if((game.input.keyboard.isDown(Phaser.Keyboard.A) && !(game.input.keyboard.isDown(Phaser.Keyboard.D))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.A)) && game.input.keyboard.isDown(Phaser.Keyboard.D))){
+			if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
+				this.body.velocity.x = -300;
+			}
+			else{
+				this.body.velocity.x = 300;
+			}
 		}
-	}
-	if((game.input.keyboard.isDown(Phaser.Keyboard.A) && !(game.input.keyboard.isDown(Phaser.Keyboard.D))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.A)) && game.input.keyboard.isDown(Phaser.Keyboard.D))){
-		if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
-			this.body.velocity.x = -300;
-		}
-		else{
-			this.body.velocity.x = 300;
-		}
-	}
 
-	//Adds functionality for changing between shapes with 123 keys
-	if(game.input.keyboard.isDown(Phaser.Keyboard.J)){
-			this.animations.play('triangle');
-			this.tint = Phaser.Color.YELLOW;
-			shapeType = 'triangle';
-	}
-	else if(game.input.keyboard.isDown(Phaser.Keyboard.K)){
-			this.animations.play('circle');
-			this.tint = Phaser.Color.RED;
-			shapeType = 'circle';	
-	}
-	else if(game.input.keyboard.isDown(Phaser.Keyboard.L)){
-			this.animations.play('square');
-			this.tint = Phaser.Color.BLUE;
-			shapeType = 'square';
-	}
-
+		//Adds functionality for changing between shapes with 123 keys
+		if(game.input.keyboard.isDown(Phaser.Keyboard.J)){
+				this.animations.play('triangle');
+				this.tint = Phaser.Color.YELLOW;
+				shapeType = 'triangle';
+		}
+		else if(game.input.keyboard.isDown(Phaser.Keyboard.K)){
+				this.animations.play('circle');
+				this.tint = Phaser.Color.RED;
+				shapeType = 'circle';	
+			}
+			else if(game.input.keyboard.isDown(Phaser.Keyboard.L)){
+					this.animations.play('square');
+					this.tint = Phaser.Color.BLUE;
+					shapeType = 'square';
+			}
+		}
 }
