@@ -39,24 +39,26 @@ Player.prototype.shapeType = function(){
 }
 Player.prototype.update = function() {
 	//initialize the player movement if not moving
+	var playerSpeed = 250;
+	//reset speed if not moving
 	this.body.velocity.x = 0;
 	this.body.velocity.y = 0;
 	if (!player.destroyed){
 	//Adds functionality for WASD movement
 		if((game.input.keyboard.isDown(Phaser.Keyboard.W) && !(game.input.keyboard.isDown(Phaser.Keyboard.S))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.W)) && game.input.keyboard.isDown(Phaser.Keyboard.S))){
 			if(game.input.keyboard.isDown(Phaser.Keyboard.W)){
-				this.body.velocity.y = -300;
+				this.body.velocity.y = -playerSpeed;
 			}
 			else{
-				this.body.velocity.y = 300;
+				this.body.velocity.y = playerSpeed;
 			}
 		}
 		if((game.input.keyboard.isDown(Phaser.Keyboard.A) && !(game.input.keyboard.isDown(Phaser.Keyboard.D))) || (!(game.input.keyboard.isDown(Phaser.Keyboard.A)) && game.input.keyboard.isDown(Phaser.Keyboard.D))){
 			if(game.input.keyboard.isDown(Phaser.Keyboard.A)){
-				this.body.velocity.x = -300;
+				this.body.velocity.x = -playerSpeed;
 			}
 			else{
-				this.body.velocity.x = 300;
+				this.body.velocity.x = playerSpeed;
 			}
 		}
 

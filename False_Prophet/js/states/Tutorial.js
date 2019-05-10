@@ -72,15 +72,22 @@ Tutorial.prototype = {
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
 		type.forEach(function(enemy){
-
+			//how quickly a shape runs away
 			var fleeSpeed = 100;
+			//how quickly a shape runs toward the player aggresively
+			var attackSpeed = 200;
+			//how close a shape has to be to "see" the player shape and react
 			var sightRange = 400;
+			//the approximate proximity following shapes will go before they stop moving toward player
+			var followDist = 120;
+			//withinSightRange bool returns true if a shape can see a player
+			var shapeCanSeePlayer = Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange;
 			//shapesightRange will be the max distance shapes will attack other shapes
 			//not implemented yet
 			//var	shapeSightRange = 150;
 			//shape follows the player if the are the same shape, never getting too close
        		if (player.shapeType() == same){
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
+				if(shapeCanSeePlayer && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
 					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
 				}
 				else{
@@ -88,13 +95,12 @@ Tutorial.prototype = {
 					enemy.body.velocity.y = 0;
 				}
 			}
-
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange){
+				if(shapeCanSeePlayer){
 					//changes fleespeed if closer to the player
 					if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 150){
-						fleeSpeed = 180;
+						fleeSpeed = fleeSpeed * 1.8;
 					}
 
 					//moves the enemy appropriately
@@ -126,9 +132,8 @@ Tutorial.prototype = {
 
 			//shape runs at the player, wanting to collide with the player
 			else if (player.shapeType() == strong){
-				//console.log("Attack!");
-				if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 40){
-					game.physics.arcade.moveToObject(enemy, player, 150);
+				if(shapeCanSeePlayer){
+					game.physics.arcade.moveToObject(enemy, player, attackSpeed);
 				}
 				else{
 					enemy.body.velocity.x = 0;
