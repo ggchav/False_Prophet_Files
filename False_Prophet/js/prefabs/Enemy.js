@@ -1,15 +1,15 @@
-var type = 0;
+var type = "";
 
 Enemy = function (game, x, y, type) {
 
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet', type+0);
 
 	game.physics.enable(this);
+	this.type = type;
 	this.body.collideWorldBounds = true;
 	this.animations.add("triangle",[3,4,5], 10, true, true);
 	this.animations.add("square",[0,1,2], 10, true, true);
 	this.animations.add("circle",[6,7,8], 10, true, true);
-
 	this.animations.play(type);
 	this.scale.x *=.35;
 	this.scale.y *=.35;
