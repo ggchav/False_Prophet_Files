@@ -84,7 +84,6 @@ Tutorial.prototype = {
 		if (!game.camera.atLimit.y){
         	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
 		}
-		
 	},
 
 	shapeMovement: function(type, same, weak, strong){
@@ -95,13 +94,18 @@ Tutorial.prototype = {
 			//how quickly a shape runs toward the player aggresively
 			var attackSpeed = 200;
 			//how close a shape has to be to "see" the player shape and react
-			var sightRange = 400;
+			var sightRange = 500;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 120;
 			//shorthand to make it easier to refer to the distance between shape vs player
 			var playerShapeDist = Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y);
 			//withinSightRange bool returns true if a shape can see a player
 			var shapeCanSeePlayer = playerShapeDist <= sightRange;
+			//variable to set volume to play sound effect at, increases value with proximity
+			var soundVol = (sightRange - playerShapeDist) /1000;
+			if (soundVol > .6){
+				soundVol = .6;
+			}
 			//shapesightRange will be the max distance shapes will attack other shapes
 			//not implemented yet
 			//var	shapeSightRange = 150;
@@ -118,24 +122,26 @@ Tutorial.prototype = {
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
 				if(shapeCanSeePlayer){
-
 					//how many sounds that can play at once of this type
 					var maxSounds = 2;
+					//bool flag that prevents tons of sounds from playing at once
 					var maxPlaying = false;
+					//counts the sounds playing to track maxSound limit
 					var counter = 0;
 					var rng = Math.floor(Math.random()*5);
 					for (i=0; i<5; i++){
 						if (flee[i].isPlaying == true){
 							counter ++;
+							//tween sound to not abruptly adjust to the distance the shape is from player
+							game.add.tween(flee[i].volume).to({volume:soundVol}, 500).start();
 						}
 					}
 					if (counter >= maxSounds){
 							maxPlaying = true;
 					}
 					if (!maxPlaying){
-						flee[rng].play(null, 0,.6,false,false);
+						flee[rng].play(null, 0,soundVol,false,false);
 					}
-					//flee[rng].play('flee',0,2,false,false);
 					//changes fleespeed if closer to the player
 					if(playerShapeDist <= 150){
 						fleeSpeed = fleeSpeed * 1.8;
