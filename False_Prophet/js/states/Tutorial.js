@@ -2,6 +2,14 @@ var player;
 var triangle = [];
 var square= [];
 var circle= [];
+//audio array for each sound type
+var flee = new Array();
+var attack = new Array();
+var follow = new Array();
+
+//var channel_max = 8;	
+//audiochannels = new Array();
+
 var shapeGroup;
 
 var Tutorial = function(game){};
@@ -11,7 +19,17 @@ Tutorial.prototype = {
 	create: function() {
 		//set the bounds of the level
 		game.world.setBounds(0, 0, 3600, 1800);
+		//load sounds into an array
 
+		for (i = 1; i < 6; i++){
+			 flee[i-1] = game.add.audio("flee"+i);
+		}
+		for (i = 1; i < 6; i++){
+			 attack[i-1] = game.add.audio("attack"+i);
+		}
+		for (i = 1; i < 6; i++){
+			 follow[i-1] = game.add.audio("follow"+i);
+		}
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1200, 600, 'background');
 
@@ -80,14 +98,16 @@ Tutorial.prototype = {
 			var sightRange = 400;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 120;
+			//shorthand to make it easier to refer to the distance between shape vs player
+			var playerShapeDist = Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y);
 			//withinSightRange bool returns true if a shape can see a player
-			var shapeCanSeePlayer = Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= sightRange;
+			var shapeCanSeePlayer = playerShapeDist <= sightRange;
 			//shapesightRange will be the max distance shapes will attack other shapes
 			//not implemented yet
 			//var	shapeSightRange = 150;
 			//shape follows the player if the are the same shape, never getting too close
        		if (player.shapeType() == same){
-				if(shapeCanSeePlayer && Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) >= 120){
+				if(shapeCanSeePlayer && playerShapeDist >= 120){
 					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
 				}
 				else{
@@ -98,11 +118,28 @@ Tutorial.prototype = {
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
 				if(shapeCanSeePlayer){
+
+					//how many sounds that can play at once of this type
+					var maxSounds = 2;
+					var maxPlaying = false;
+					var counter = 0;
+					var rng = Math.floor(Math.random()*5);
+					for (i=0; i<5; i++){
+						if (flee[i].isPlaying == true){
+							counter ++;
+						}
+					}
+					if (counter >= maxSounds){
+							maxPlaying = true;
+					}
+					if (!maxPlaying){
+						flee[rng].play(null, 0,.6,false,false);
+					}
+					//flee[rng].play('flee',0,2,false,false);
 					//changes fleespeed if closer to the player
-					if(Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y) <= 150){
+					if(playerShapeDist <= 150){
 						fleeSpeed = fleeSpeed * 1.8;
 					}
-
 					//moves the enemy appropriately
 					if(player.body.x + 35 < enemy.body.x){
 						enemy.body.velocity.x = fleeSpeed;
@@ -129,7 +166,6 @@ Tutorial.prototype = {
 					enemy.body.velocity.y = 0;
 				}
 			}
-
 			//shape runs at the player, wanting to collide with the player
 			else if (player.shapeType() == strong){
 				if(shapeCanSeePlayer){
@@ -154,6 +190,34 @@ Tutorial.prototype = {
 		//this.createParticles(weak);
 		weak.kill();
 	},
+	/*
+	playSound: function(type){
+		var createdChannel = false;
+		//for loop that goes through each of the audio channels established in the array earlier.
+		//if a channel is finished, it loads a new sound and plays it back in that channel
+		for (a=0; a<audiochannels.length; a++) {
+				thistime = new Date();
+				var channel = audiochannels[a]['channel'];
+				var soundSrc = document.getElementById(sound).src;
+				if (audiochannels[a]['finished'] < thistime.getTime() && !createdChannel) {			// is this channel finished?
+					audiochannels[a]['finished'] = thistime.getTime() + document.getElementById(sound).duration*2000;
+					channel = document.getElementById(sound);
+					channel.load();
+					channel.playbackRate = playSpeed;
+					channel.loop = false;
+					channel.play();
+					//createdChannel boolean tells the loop to stop adding more sounds in continued iterations of the for loop
+					createdChannel = true;
+				}
+				//checks if the same sound is currently playing in another channel, if so it stops it
+				if (soundSrc == channel.src && channel.currentTime > 0){
+					console.log("stop attempting to run");
+					channel.pause();
+					channel.currentTime = 0;
+				}				
+		}
+
+	}*/
 	createParticles: function(shape){
 		//kills shapes when they collide
 		var deathEmitter = game.add.emitter(shape.x, shape.y, 100);

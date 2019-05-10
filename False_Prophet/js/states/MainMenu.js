@@ -16,7 +16,19 @@ MainMenu.prototype = {
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
 		
 		// load audio assets
-		game.load.path = 'assets/audio/';
+		game.load.path = 'assets/sound/';
+		var soundtype = "flee";
+		for (i = 1; i < 7; i++){
+			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+		}
+		soundtype = "anger";
+		for (i = 1; i < 7; i++){
+			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+		}
+		soundtype = "follow";
+		for (i = 1; i < 7; i++){
+			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+		}
 
 	},
 

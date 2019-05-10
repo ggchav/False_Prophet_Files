@@ -3,8 +3,6 @@ var shapeType = 'triangle';
 Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
-
-
 	//enables physics and colliding on the world bounds
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
