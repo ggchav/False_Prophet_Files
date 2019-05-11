@@ -30,17 +30,19 @@ Tutorial.prototype = {
 			 follow[i-1] = game.add.audio("follow"+i);
 		}
 		//initialize the tilesprite for the background
-		background = game.add.tileSprite(0, 0, 1200, 600, 'background');
+		background = game.add.tileSprite(0, 0, 1280, 720, 'background');
 
 		//create the group used for the enemy shapes
 		shapeGroup = game.add.group();
 		shapeGroup.enableBody = true;
 
 		//create the player from the prefab
-		player = new Player(game, 300, 865);
+		player = new Player(game, 600, 865);
 
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
+		overlay = game.add.image(0,0,'overlay');
+		overlay.fixedToCamera = true;
 		game.camera.follow(player);
 
 		//creates enemies from prefabs and adds them to the shape group
@@ -91,7 +93,7 @@ Tutorial.prototype = {
 			//how quickly a shape runs away
 			var fleeSpeed = 100;
 			//how quickly a shape runs toward the player aggresively
-			var angerSpeed = 200;
+			var angerSpeed = 220;
 			//how close a shape has to be to "see" the player shape and react
 			var sightRange = 500;
 			//the approximate proximity following shapes will go before they stop moving toward player
@@ -126,6 +128,7 @@ Tutorial.prototype = {
 					maxPlaying = true;
 				}
 				if (!maxPlaying){
+					//calls the sound array for that sound type[picksrandom] play passes soundVol
 					typeArray[rng].play(null, 0,soundVol,false,false);
 				}	
 			}
@@ -139,12 +142,12 @@ Tutorial.prototype = {
        				if (playerShapeDist >= 120){
        					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
        				}
+					else{
+						enemy.body.velocity.x = 0;
+						enemy.body.velocity.y = 0;
+					}
        			}
 
-				else{
-					enemy.body.velocity.x = 0;
-					enemy.body.velocity.y = 0;
-				}
 			}
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
