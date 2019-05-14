@@ -7,12 +7,15 @@ MainMenu.prototype = {
 		//load image assets
 		game.load.path = 'assets/img/';
 
-		game.load.image('x', 'playerx.png');
+		game.load.image('x', 'x0.png');
 		game.load.image('background', 'tempbackground.png');
 		game.load.image('barrier', 'barrier.png');
 		game.load.image('triangle', 'triangle0.png');
 		game.load.image('square', 'square0.png');
 		game.load.image('circle', 'circle0.png');
+		game.load.image('overlay', 'overlay.png');
+ 		game.load.image('smoke', 'smoke.png');
+
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
 		
 		// load audio assets

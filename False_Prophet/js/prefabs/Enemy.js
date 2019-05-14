@@ -9,7 +9,8 @@ Enemy = function (game, x, y, type) {
 	this.body.collideWorldBounds = true;
 	this.type = type;
 	//adds in the three types of shape animations
-		this.animations.add("triangle", Phaser.Animation.generateFrameNames('triangle', 0, 2), 10, true, true);
+
+	this.animations.add("triangle", Phaser.Animation.generateFrameNames('triangle', 0, 2), 10, true, true);
 	this.animations.add("square", Phaser.Animation.generateFrameNames('square', 0, 2), 10, true, true);
 	this.animations.add("circle", Phaser.Animation.generateFrameNames('circle', 0, 2), 10, true, true);
 
@@ -31,6 +32,21 @@ Enemy = function (game, x, y, type) {
 
 Enemy.prototype.shapeType = function(){
 	return type;
+}
+Enemy.prototype.createParticles = function(){
+	//kills shapes when they collide
+	var deathEmitter = game.add.emitter(this.x, this.y, 100);
+	deathEmitter.makeParticles(this.shapeType());
+	//set particle properties including alpha, particle size and speed
+	deathEmitter.setAlpha(0.3, 1);				
+	deathEmitter.minParticleScale = 0.04;		
+	deathEmitter.maxParticleScale = .13;
+	deathEmitter.setXSpeed(-300,300);			
+	deathEmitter.setYSpeed(-300,300);			
+	//start emitting 200 particles that disappear after 2000ms
+	deathEmitter.start(true, 2000, null, 200);
+	//loop through each particle and change it's tint to the color of the player's tint at time of death.
+	deathEmitter.forEach(function(item){item.tint = this.tint;});
 }
 Enemy.prototype = Object.create(Phaser.Sprite.prototype);
 Enemy.prototype.constructor = Enemy;
