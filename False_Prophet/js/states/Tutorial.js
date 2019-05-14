@@ -7,6 +7,8 @@ var flee = new Array();
 var anger = new Array();
 var follow = new Array();
 
+
+
 //var channel_max = 8;	
 //audiochannels = new Array();
 
@@ -31,14 +33,16 @@ Tutorial.prototype = {
 		}
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1280, 720, 'background');
-
+		
 		//create the group used for the enemy shapes
 		shapeGroup = game.add.group();
 		shapeGroup.enableBody = true;
 
 		//create the player from the prefab
 		player = new Player(game, 600, 865);
-
+		//reset player shape type
+		player.reset();
+		deathEmitter = game.add.emitter(player.x, player.y, 100);
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
 		overlay = game.add.image(0,0,'overlay');
@@ -64,20 +68,32 @@ Tutorial.prototype = {
 			game.physics.arcade.overlap(shapeGroup, player, this.killPlayer, null, this);
 
 			//follows though the different shape/player interactions
+			//(shape, same, weak, strong)
 			this.shapeMovement(triangle,'triangle', 'circle', 'square');
 			this.shapeMovement(circle,'circle', 'square', 'triangle');
 			this.shapeMovement(square,'square', 'triangle', 'circle');
 		}
+		/*
+		if (player.cooldown > 0){
+			this.timer = this.game.time.events.loop(Phaser.Timer.SECOND, this.updateTimer, this);
+
+		}
+		*/
+
 		//For seperating similar shapes
+		deathEmitter.forEachAlive(function(p){p.alpha= p.lifespan / deathEmitter.lifespan; });
+
 		game.physics.arcade.collide(triangle, triangle);
 		game.physics.arcade.collide(circle, circle);
 		game.physics.arcade.collide(square, square);
 
 		//for when an opposing shapes contact eachother
-		game.physics.arcade.overlap(triangle, square, this.killShape, null, this);
-		game.physics.arcade.overlap(square, circle, this.killShape, null, this);
-		game.physics.arcade.overlap(circle, triangle, this.killShape, null, this);
-
+		//game.physics.arcade.overlap(shapeGroup, shapeGroup, this.checkOverlap, null,);
+		game.physics.arcade.overlap(triangle, square, this.killShape, null,this);
+		game.physics.arcade.overlap(square, circle, this.killShape, null,this);
+		game.physics.arcade.overlap(circle, triangle, this.killShape, null,this);
+		
+		
 		//instructions for the camera to stay on the screen
 		if (!game.camera.atLimit.x){
         	background.tilePosition.x -= (player.body.velocity.x * game.time.physicsElapsed);
@@ -85,13 +101,14 @@ Tutorial.prototype = {
 		if (!game.camera.atLimit.y){
         	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
 		}
+		game.world.bringToTop(overlay);
 	},
 
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
 		type.forEach(function(enemy){
 			//how quickly a shape runs away
-			var fleeSpeed = 100;
+			var fleeSpeed = 200;
 			//how quickly a shape runs toward the player aggresively
 			var angerSpeed = 220;
 			//how close a shape has to be to "see" the player shape and react
@@ -152,7 +169,6 @@ Tutorial.prototype = {
 			//shape runs away from the player
 			else if (player.shapeType() == weak){
 				if(shapeCanSeePlayer){
-				
        				shapeSound(flee);
 					//changes fleespeed if closer to the player
 					if(playerShapeDist <= 150){
@@ -203,26 +219,27 @@ Tutorial.prototype = {
 			}
        	});
 	},
+	createParticles: function(shape){
+	//kills shapes when they collide
+	deathEmitter = game.add.emitter(shape.x, shape.y, 100);
+	deathEmitter.makeParticles(shape.shapeType());
+	//set particle properties including alpha, particle size and speed
+	deathEmitter.setAlpha(0.3, 1);				
+	deathEmitter.minParticleScale = 0.04;		
+	deathEmitter.maxParticleScale = .13;
+	deathEmitter.setXSpeed(-300,300);			
+	deathEmitter.setYSpeed(-300,300);			
+	//start emitting 200 particles that disappear after 2000ms
+	deathEmitter.start(true, 2000, null, 200);
+	//loop through each particle and change it's tint to the color of the player's tint at time of death.
+	deathEmitter.forEach(function(item){item.tint = shape.tint;});
+	},
 	killShape: function(strong, weak){
 		//kills shapes when they collide
 		//createParticles throws an error when passed anything but the player for unknown reasons
 		//this.createParticles(weak);
+		//this.createParticles();
 		weak.kill();
-	},
-	createParticles: function(shape){
-		//kills shapes when they collide
-		var deathEmitter = game.add.emitter(shape.x, shape.y, 100);
-		deathEmitter.makeParticles(shape.shapeType());
-		//set particle properties including alpha, particle size and speed
-		deathEmitter.setAlpha(0.3, 1);				
-		deathEmitter.minParticleScale = 0.04;		
-		deathEmitter.maxParticleScale = .13;
-		deathEmitter.setXSpeed(-300,300);			
-		deathEmitter.setYSpeed(-300,300);			
-		//start emitting 200 particles that disappear after 2000ms
-		deathEmitter.start(true, 2000, null, 200);
-		//loop through each particle and change it's tint to the color of the player's tint at time of death.
-		deathEmitter.forEach(function(item){item.tint = shape.tint;});
 	},
 	
 	killPlayer: function(shapes, playershape){
