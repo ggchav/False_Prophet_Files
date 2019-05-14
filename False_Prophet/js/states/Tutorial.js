@@ -81,6 +81,7 @@ Tutorial.prototype = {
 		*/
 
 		//For seperating similar shapes
+		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
 		deathEmitter.forEachAlive(function(p){p.alpha= p.lifespan / deathEmitter.lifespan; });
 
 		game.physics.arcade.collide(triangle, triangle);
@@ -201,7 +202,7 @@ Tutorial.prototype = {
 				}
 			}
 			//shape runs at the player, wanting to collide with the player
-			else if (player.shapeType() == strong){
+			else if (player.shapeType() == strong || player.shapeType() == 'x'){
 				if(shapeCanSeePlayer){
 					shapeSound(anger);
 					game.physics.arcade.moveToObject(enemy, player, angerSpeed);
@@ -219,18 +220,25 @@ Tutorial.prototype = {
 			}
        	});
 	},
-	createParticles: function(shape){
+	createParticles: function(shape,enemyBool){
 	//kills shapes when they collide
 	deathEmitter = game.add.emitter(shape.x, shape.y, 100);
-	deathEmitter.makeParticles(shape.shapeType());
+	//if the passed shape is an enemy, enemy bool is true
+	
+	if (!enemyBool){
+		deathEmitter.makeParticles(shape.shapeType());
+	} else{
+		deathEmitter.makeParticles('smoke');
+	}
 	//set particle properties including alpha, particle size and speed
+	
 	deathEmitter.setAlpha(0.3, 1);				
 	deathEmitter.minParticleScale = 0.04;		
 	deathEmitter.maxParticleScale = .13;
-	deathEmitter.setXSpeed(-300,300);			
-	deathEmitter.setYSpeed(-300,300);			
-	//start emitting 200 particles that disappear after 2000ms
-	deathEmitter.start(true, 2000, null, 200);
+	deathEmitter.setXSpeed(-200,200);			
+	deathEmitter.setYSpeed(-200,200);			
+	//start emitting 150 particles that disappear after 1500ms
+	deathEmitter.start(true, 1500, null, 150);
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
 	deathEmitter.forEach(function(item){item.tint = shape.tint;});
 	},
@@ -238,13 +246,14 @@ Tutorial.prototype = {
 		//kills shapes when they collide
 		//createParticles throws an error when passed anything but the player for unknown reasons
 		//this.createParticles(weak);
-		//this.createParticles();
+		console.log("createParticles called...");
+		this.createParticles(weak, true);
 		weak.kill();
 	},
 	
 	killPlayer: function(shapes, playershape){
 		//kills the player when collided with any shape
-		this.createParticles(player);
+		this.createParticles(player,false);
 		player.animations.stop();
 		player.destroyed = true;
 		player.kill();

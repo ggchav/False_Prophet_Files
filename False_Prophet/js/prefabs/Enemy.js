@@ -9,9 +9,9 @@ Enemy = function (game, x, y, type) {
 	this.body.collideWorldBounds = true;
 	this.type = type;
 	//adds in the three types of shape animations
-	this.animations.add("triangle",[3,4,5], 10, true, true);
-	this.animations.add("square",[0,1,2], 10, true, true);
-	this.animations.add("circle",[6,7,8], 10, true, true);
+	this.animations.add("triangle", Phaser.Animation.generateFrameNames('triangle', 0, 2), 10, true, true);
+	this.animations.add("square", Phaser.Animation.generateFrameNames('square', 0, 2), 10, true, true);
+	this.animations.add("circle", Phaser.Animation.generateFrameNames('circle', 0, 2), 10, true, true);
 
 	//plays the correct shape animation
 	this.animations.play(type);

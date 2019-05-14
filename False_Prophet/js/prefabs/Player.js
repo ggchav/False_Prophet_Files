@@ -1,4 +1,4 @@
-var shapeType = 'triangle';
+var shapeType = 'x';
 var shapeCooldown=0;
 Player = function (game, x, y){
 	
@@ -8,13 +8,14 @@ Player = function (game, x, y){
 	this.body.collideWorldBounds = true;
 	//this.shapetype = 'triangle'
 	//adds in the three types of shape animations
-	this.animations.add("triangle",[3,4,5], 10, true, true);
-	this.animations.add("square",[0,1,2], 10, true, true);
-	this.animations.add("circle",[6,7,8], 10, true, true);
+	this.animations.add("triangle", Phaser.Animation.generateFrameNames('triangle', 0, 2), 10, true, true);
+	this.animations.add("square", Phaser.Animation.generateFrameNames('square', 0, 2), 10, true, true);
+	this.animations.add("circle", Phaser.Animation.generateFrameNames('circle', 0, 2), 10, true, true);
+	this.animations.add("x", Phaser.Animation.generateFrameNames('x', 0, 2), 10, true, true);
 
 	//change to the x player later
-	this.animations.play("triangle");
-	this.tint = Phaser.Color.YELLOW;
+	this.animations.play("x");
+	//this.tint = Phaser.Color.YELLOW;
 
 	//sets to correct size with correct bounds
 	this.scale.x *=.35;
@@ -36,7 +37,7 @@ Player.prototype.shapeType = function(){
 	return shapeType;
 }
 Player.prototype.reset = function(){
-	shapeType = 'triangle';
+	shapeType = 'x';
 }
 Player.prototype.createParticles = function(){
 	//kills shapes when they collide
