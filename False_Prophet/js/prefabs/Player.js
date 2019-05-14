@@ -8,13 +8,13 @@ Player = function (game, x, y){
 	this.body.collideWorldBounds = true;
 
 	//adds in the three types of shape animations
-	this.animations.add("triangle",[3,4,5], 10, true, true);
-	this.animations.add("square",[0,1,2], 10, true, true);
-	this.animations.add("circle",[6,7,8], 10, true, true);
+	this.animations.add("triangle", Phaser.Animation.generateFrameNames('triangle', 0, 2), 10, true, true);
+	this.animations.add("square", Phaser.Animation.generateFrameNames('square', 0, 2), 10, true, true);
+	this.animations.add("circle", Phaser.Animation.generateFrameNames('circle', 0, 2), 10, true, true);
 
 	//change to the x player later
 	this.animations.play("triangle");
-	this.tint = Phaser.Color.YELLOW;
+	this.tint = 0x847979;
 
 	//sets to correct size with correct bounds
 	this.scale.x *=.35;
@@ -63,17 +63,17 @@ Player.prototype.update = function() {
 		//Adds functionality for changing between shapes with 123 keys
 		if(game.input.keyboard.isDown(Phaser.Keyboard.J)){
 				this.animations.play('triangle');
-				this.tint = Phaser.Color.YELLOW;
+				this.tint = 0xF2DD6E;
 				shapeType = 'triangle';
 		}
 		else if(game.input.keyboard.isDown(Phaser.Keyboard.K)){
 				this.animations.play('circle');
-				this.tint = Phaser.Color.RED;
+				this.tint = 0xE5B25D;
 				shapeType = 'circle';	
 			}
 			else if(game.input.keyboard.isDown(Phaser.Keyboard.L)){
 					this.animations.play('square');
-					this.tint = Phaser.Color.BLUE;
+					this.tint = 0xCFF27E;
 					shapeType = 'square';
 			}
 		}
