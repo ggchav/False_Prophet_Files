@@ -234,19 +234,23 @@ Tutorial.prototype = {
 	//kills shapes when they collide
 	deathEmitter = game.add.emitter(shape.x, shape.y, 100);
 	//if the passed shape is an enemy, enemy bool is true
-	
+	var size = 1;
+	var spread = 1;
 	if (!enemyBool){
 		deathEmitter.makeParticles(shape.shapeType());
 	} else{
 		deathEmitter.makeParticles('smoke');
+		size = 3;
+		spread = .7;
 	}
 	//set particle properties including alpha, particle size and speed
 	
-	deathEmitter.setAlpha(0.3, 1);				
+	deathEmitter.setAlpha(0.3, 1*spread);				
 	deathEmitter.minParticleScale = 0.04;		
-	deathEmitter.maxParticleScale = .13;
-	deathEmitter.setXSpeed(-200,200);			
-	deathEmitter.setYSpeed(-200,200);			
+	deathEmitter.maxParticleScale = .13*size;
+	var speed = 200 * spread;
+	deathEmitter.setXSpeed(-speed,speed);			
+	deathEmitter.setYSpeed(-speed,speed);			
 	//start emitting 150 particles that disappear after 1500ms
 	deathEmitter.start(true, 1500, null, 150);
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
