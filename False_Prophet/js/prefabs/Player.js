@@ -61,7 +61,7 @@ Player.prototype.createParticles = function(){
 }
 Player.prototype.update = function() {
 	//initialize the player movement if not moving
-	var playerSpeed = 250;
+	var playerSpeed = 230;
 	//reset speed if not moving
 	this.body.velocity.x = 0;
 	this.body.velocity.y = 0;
