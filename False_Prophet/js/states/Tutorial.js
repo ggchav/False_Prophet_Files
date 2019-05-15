@@ -2,12 +2,13 @@ var player;
 var triangle = [];
 var square= [];
 var circle= [];
+var music;
 //audio array for each sound type
 var flee = new Array();
 var anger = new Array();
 var follow = new Array();
 
-
+var poofArray = new Array();
 
 //var channel_max = 8;	
 //audiochannels = new Array();
@@ -21,19 +22,27 @@ Tutorial.prototype = {
 	create: function() {
 		//set the bounds of the level
 		game.world.setBounds(0, 0, 3600, 1800);
+
 		//load sounds into an array
 		for (i = 1; i < 6; i++){
 			 flee[i-1] = game.add.audio("flee"+i);
-		}
-		for (i = 1; i < 6; i++){
 			 anger[i-1] = game.add.audio("anger"+i);
-		}
-		for (i = 1; i < 6; i++){
 			 follow[i-1] = game.add.audio("follow"+i);
+		}
+		for (i = 0; i < 3; i++){
+			poofArray[i] = game.add.audio("poof"+i);
 		}
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1280, 720, 'background');
-		
+	
+		// add music if it's not already playing/loaded
+		if (!music){
+			music = game.add.audio('music');
+		}
+		// add music if it's not already playing
+		if (!music.isPlaying){
+			music.play(null, 0,.65,true);
+		}
 		//create the group used for the enemy shapes
 		shapeGroup = game.add.group();
 		shapeGroup.enableBody = true;
@@ -133,18 +142,19 @@ Tutorial.prototype = {
 				var maxPlaying = false;
 				//counts the sounds playing to track maxSound limit
 				var counter = 0;
-				var rng = Math.floor(Math.random()*5);
+				
 				for (i=0; i<5; i++){
 					if (typeArray[i].isPlaying == true){
 						counter ++;
 						//tween sound to not abruptly adjust to the distance the shape is from player
-						game.add.tween(flee[i].volume).to({volume:soundVol}, 500).start();
+						game.add.tween(typeArray[i].volume).to({volume:soundVol}, 500).start();
 					}
 				}
 				//only play sound if max amount of audio isn't playing using maxPlaying bool 
 				if (counter >= maxSounds){
 					maxPlaying = true;
 				}
+				var rng = Math.floor(Math.random()*5);
 				if (!maxPlaying){
 					//calls the sound array for that sound type[picksrandom] play passes soundVol
 					typeArray[rng].play(null, 0,soundVol,false,false);
@@ -246,7 +256,9 @@ Tutorial.prototype = {
 		//kills shapes when they collide
 		//createParticles throws an error when passed anything but the player for unknown reasons
 		//this.createParticles(weak);
-		console.log("createParticles called...");
+		var rng = Math.floor(Math.random()*3);
+		//calls the puffsound array for that sound type[picksrandom] play passes soundVol
+		poofArray[rng].play(null, 0, 1,false,false);
 		this.createParticles(weak, true);
 		weak.kill();
 	},
@@ -255,6 +267,8 @@ Tutorial.prototype = {
 		//kills the player when collided with any shape
 		this.createParticles(player,false);
 		player.animations.stop();
+		var rng = Math.floor(Math.random()*3);
+		poofArray[rng].play(null, 0, 1,false,false);
 		player.destroyed = true;
 		player.kill();
 		//restarts the level after we see the particle explosion of the player
