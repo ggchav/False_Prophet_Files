@@ -20,19 +20,19 @@ MainMenu.prototype = {
 		
 		// load audio assets
 		game.load.path = 'assets/sound/';
-		var soundtype = "flee";
+		game.load.audio('music','music.mp3');
+		game.load.audio('transform','changepoof.mp3');
+		for (i = 0; i < 3; i++) {
+			game.load.audio('poof'+i,['deathpoof'+i+'.mp3']);
+		}
 		for (i = 1; i < 7; i++){
+			var soundtype = "flee";
+			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+			soundtype = "anger";
+			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+			soundtype = "follow";
 			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
 		}
-		soundtype = "anger";
-		for (i = 1; i < 7; i++){
-			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
-		}
-		soundtype = "follow";
-		for (i = 1; i < 7; i++){
-			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
-		}
-
 	},
 
 	create: function() {

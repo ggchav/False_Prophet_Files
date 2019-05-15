@@ -1,10 +1,14 @@
 var shapeType = 'x';
 var shapeCooldown=0;
+var transformSound;
 Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 	//enables physics and colliding on the world bounds
 	game.physics.enable(this);
+	//load transform sound
+	transformSound = game.add.audio('transform');
+
 	this.body.collideWorldBounds = true;
 	//this.shapetype = 'triangle'
 	//adds in the three types of shape animations
@@ -90,12 +94,14 @@ Player.prototype.update = function() {
 				this.animations.play('triangle');
 				this.tint = Phaser.Color.YELLOW;
 				shapeType = 'triangle';
+				transformSound.play();
 				this.createParticles();
 		}
 		else if(kKey.justDown && shapeCooldown == 0){
 				this.animations.play('circle');
 				this.tint = Phaser.Color.RED;
 				shapeType = 'circle';
+				transformSound.play();
 				this.createParticles();
 				
 				
@@ -104,6 +110,7 @@ Player.prototype.update = function() {
 				this.animations.play('square');
 				this.tint = Phaser.Color.BLUE;
 				shapeType = 'square';
+				transformSound.play();
 				this.createParticles();
 				//this.cooldown = 0;
 
