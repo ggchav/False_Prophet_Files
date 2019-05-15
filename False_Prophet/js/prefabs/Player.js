@@ -3,19 +3,30 @@ var shapeCooldown=0;
 Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
+
 	//enables physics and colliding on the world bounds
-	game.physics.enable(this);
+	this.game.physics.p2.enable(this, true); //debug is on right now
 	this.body.collideWorldBounds = true;
+
 	//this.shapetype = 'triangle'
+
 	//adds in the three types of shape animations
 	this.animations.add("triangle", Phaser.Animation.generateFrameNames('triangle', 0, 2), 10, true, true);
 	this.animations.add("square", Phaser.Animation.generateFrameNames('square', 0, 2), 10, true, true);
 	this.animations.add("circle", Phaser.Animation.generateFrameNames('circle', 0, 2), 10, true, true);
 	this.animations.add("x", Phaser.Animation.generateFrameNames('x', 0, 2), 10, true, true);
 
-	//change to the x player later
+	//starts the player as an x sprite
 	this.animations.play("x");
+
+	//gets rid of current bounding box
+    this.body.clearShapes();
+
+    //loads up the x physics
+    this.body.loadPolygon("spritephysics", "x0");
+
 	//this.tint = Phaser.Color.YELLOW;
+
 	//sets to correct size with correct bounds
 	this.scale.x *=.35;
 	this.scale.y *=.35;
@@ -87,12 +98,26 @@ Player.prototype.update = function() {
 
 		if(jKey.justDown && shapeCooldown == 0){
 				this.animations.play('triangle');
+
+				//gets rid of current bounding box
+    			this.body.clearShapes();
+
+    			//loads up the triangle physics
+    			this.body.loadPolygon("spritephysics", "triangle0");
+
 				this.tint = Phaser.Color.YELLOW;
 				shapeType = 'triangle';
 				this.createParticles();
 		}
 		else if(kKey.justDown && shapeCooldown == 0){
 				this.animations.play('circle');
+
+				//gets rid of current bounding box
+    			this.body.clearShapes();
+
+    			//loads up the x physics
+    			this.body.loadPolygon("spritephysics", "x0");
+
 				this.tint = Phaser.Color.RED;
 				shapeType = 'circle';
 				this.createParticles();
@@ -101,6 +126,13 @@ Player.prototype.update = function() {
 		}
 		else if(lKey.justDown && shapeCooldown == 0){
 				this.animations.play('square');
+
+				//gets rid of current bounding box
+    			this.body.clearShapes();
+
+    			//loads up the x physics
+    			this.body.loadPolygon("spritephysics", "x0");
+
 				this.tint = Phaser.Color.BLUE;
 				shapeType = 'square';
 				this.createParticles();

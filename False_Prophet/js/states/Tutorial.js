@@ -19,8 +19,12 @@ var Tutorial = function(game){};
 Tutorial.prototype = {
 
 	create: function() {
+		//starts up the p2 physics
+		game.physics.startSystem(Phaser.Physics.P2JS);
+
 		//set the bounds of the level
 		game.world.setBounds(0, 0, 3600, 1800);
+
 		//load sounds into an array
 		for (i = 1; i < 6; i++){
 			 flee[i-1] = game.add.audio("flee"+i);

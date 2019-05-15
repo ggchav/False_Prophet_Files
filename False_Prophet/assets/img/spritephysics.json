@@ -1,0 +1,35 @@
+{ 
+    
+    "x0": [
+        
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   102, 130  ,  101, 70  ,  132, 99  ,  196, 167  ,  165, 197  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   37, 3  ,  101, 70  ,  102, 130  ,  6, 33  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   132, 99  ,  101, 70  ,  169, 5  ,  198, 35  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   33, 192  ,  4, 164  ,  70, 99  ,  102, 130  ]
+        }
+    ]
+    , 
+    "triangle0": [
+        
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   192, 177  ,  7, 177  ,  99, 12  ]
+        }
+    ]
+}

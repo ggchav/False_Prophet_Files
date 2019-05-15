@@ -5,7 +5,7 @@ Enemy = function (game, x, y, type) {
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 
 	//enables physics and colliding on the world bounds
-	game.physics.enable(this);
+	this.game.physics.p2.enable(this, true); //debug is on right now
 	this.body.collideWorldBounds = true;
 	this.type = type;
 	//adds in the three types of shape animations
@@ -16,6 +16,33 @@ Enemy = function (game, x, y, type) {
 
 	//plays the correct shape animation
 	this.animations.play(type);
+
+	if(type == "triangle"){
+
+		//gets rid of current bounding box
+		this.body.clearShapes();
+
+		//loads up the triangle physics
+		this.body.loadPolygon("spritephysics", "triangle0");
+	}
+	
+	else if(type == "square"){
+
+		//gets rid of current bounding box
+		this.body.clearShapes();
+
+		//loads up the triangle physics
+		this.body.loadPolygon("spritephysics", "triangle0");
+	}
+
+	else{
+
+		//gets rid of current bounding box
+		this.body.clearShapes();
+
+		//loads up the triangle physics
+		this.body.loadPolygon("spritephysics", "triangle0");
+	}
 
 	//sets to correct size with correct bounds
 	this.scale.x *=.22;

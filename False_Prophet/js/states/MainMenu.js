@@ -16,6 +16,7 @@ MainMenu.prototype = {
 		game.load.image('overlay', 'overlay.png');
  		game.load.image('smoke', 'smoke.png');
 
+ 		game.load.physics('spritephysics', 'spritephysics.json')
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
 		
 		// load audio assets
