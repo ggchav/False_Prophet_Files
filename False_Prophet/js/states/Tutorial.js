@@ -22,6 +22,18 @@ Tutorial.prototype = {
 		//starts up the p2 physics
 		game.physics.startSystem(Phaser.Physics.P2JS);
 
+		//turn on impact events for the world, without this we get no collision callbacks
+    	game.physics.p2.setImpactEvents(true);
+
+    	//makes sure things collide with world bounds
+    	game.physics.p2.updateBoundsCollisionGroup();
+
+    	//creates p2 collsion groups
+    	var playerCollisionGroup = game.physics.p2.createCollisionGroup();
+    	var triangleCollisionGroup = game.physics.p2.createCollisionGroup();
+    	var squareCollisionGroup = game.physics.p2.createCollisionGroup();
+    	var circleCollisionGroup = game.physics.p2.createCollisionGroup();
+
 		//set the bounds of the level
 		game.world.setBounds(0, 0, 3600, 1800);
 
@@ -35,6 +47,7 @@ Tutorial.prototype = {
 		for (i = 1; i < 6; i++){
 			 follow[i-1] = game.add.audio("follow"+i);
 		}
+
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1280, 720, 'background');
 		
@@ -44,12 +57,17 @@ Tutorial.prototype = {
 
 		//create the player from the prefab
 		player = new Player(game, 600, 865);
+
+		player.body.setCollisionGroup(playerCollisionGroup);
+
 		//reset player shape type
 		player.reset();
 		deathEmitter = game.add.emitter(player.x, player.y, 100);
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
+
 		overlay = game.add.image(0,0,'overlay');
+
 		overlay.fixedToCamera = true;
 		game.camera.follow(player);
 
@@ -58,10 +76,29 @@ Tutorial.prototype = {
 			triangle[i] = new Enemy(game, 1000 + i*110, 500, 'triangle');
 			circle[i] = new Enemy(game, 1500 + i*110, 900, 'circle');
 			square[i] = new Enemy(game, 1000 + i*110, 1300, 'square');
+
 			shapeGroup.add(triangle[i]);
 			shapeGroup.add(circle[i]);
 			shapeGroup.add(square[i]);
+
+			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
+			circle[i].body.setCollisionGroup(circleCollisionGroup);
+			square[i].body.setCollisionGroup(squareCollisionGroup);
+
+
+			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+
+			triangle[i].body.collides(squareCollisionGroup, this.killShape, this);
+			circle[i].body.collides(circleCollisionGroup, this.killShape, this);
+			square[i].body.collides(triangleCollisionGroup, this.killShape, this);
+
 		}
+
+		player.body.collides(triangleCollisionGroup, this.killPlayer, this);
+		player.body.collides(circleCollisionGroup, this.killPlayer, this);
+		player.body.collides(squareCollisionGroup, this.killPlayer, this);
 
 	},
 
@@ -69,7 +106,7 @@ Tutorial.prototype = {
 	// checks if player is destroyed before running these
 		if (!player.destroyed){
 			//for when a shape comes into contact with a player
-			game.physics.arcade.overlap(shapeGroup, player, this.killPlayer, null, this);
+			//game.physics.arcade.overlap(shapeGroup, player, this.killPlayer, null, this);
 
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
@@ -88,15 +125,15 @@ Tutorial.prototype = {
 		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
 		deathEmitter.forEachAlive(function(p){p.alpha= p.lifespan / deathEmitter.lifespan; });
 
-		game.physics.arcade.collide(triangle, triangle);
-		game.physics.arcade.collide(circle, circle);
-		game.physics.arcade.collide(square, square);
+		//game.physics.arcade.collide(triangle, triangle);
+		//game.physics.arcade.collide(circle, circle);
+		//game.physics.arcade.collide(square, square);
 
 		//for when an opposing shapes contact eachother
 		//game.physics.arcade.overlap(shapeGroup, shapeGroup, this.checkOverlap, null,);
-		game.physics.arcade.overlap(triangle, square, this.killShape, null,this);
-		game.physics.arcade.overlap(square, circle, this.killShape, null,this);
-		game.physics.arcade.overlap(circle, triangle, this.killShape, null,this);
+		//game.physics.arcade.overlap(triangle, square, this.killShape, null,this);
+		//game.physics.arcade.overlap(square, circle, this.killShape, null,this);
+		//game.physics.arcade.overlap(circle, triangle, this.killShape, null,this);
 		
 		
 		//instructions for the camera to stay on the screen
@@ -162,7 +199,7 @@ Tutorial.prototype = {
        			if (shapeCanSeePlayer){
        				shapeSound(follow);
        				if (playerShapeDist >= 120){
-       					game.physics.arcade.moveToObject(enemy, player, 100, 2000);
+       					//game.physics.arcade.moveToObject(enemy, player, 100, 2000);
        				}
 					else{
 						enemy.body.velocity.x = 0;
@@ -209,7 +246,7 @@ Tutorial.prototype = {
 			else if (player.shapeType() == strong || player.shapeType() == 'x'){
 				if(shapeCanSeePlayer){
 					shapeSound(anger);
-					game.physics.arcade.moveToObject(enemy, player, angerSpeed);
+					//game.physics.arcade.moveToObject(enemy, player, angerSpeed);
 				}
 				else{
 					enemy.body.velocity.x = 0;
@@ -246,6 +283,7 @@ Tutorial.prototype = {
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
 	deathEmitter.forEach(function(item){item.tint = shape.tint;});
 	},
+
 	killShape: function(strong, weak){
 		//kills shapes when they collide
 		//createParticles throws an error when passed anything but the player for unknown reasons
@@ -255,7 +293,7 @@ Tutorial.prototype = {
 		weak.kill();
 	},
 	
-	killPlayer: function(shapes, playershape){
+	killPlayer: function(playershape, shapes){
 		//kills the player when collided with any shape
 		this.createParticles(player,false);
 		player.animations.stop();

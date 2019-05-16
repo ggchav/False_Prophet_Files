@@ -5,7 +5,7 @@ Player = function (game, x, y){
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 
 	//enables physics and colliding on the world bounds
-	this.game.physics.p2.enable(this, true); //debug is on right now
+	this.game.physics.p2.enable(this, false);
 	this.body.collideWorldBounds = true;
 
 	//this.shapetype = 'triangle'
@@ -19,6 +19,10 @@ Player = function (game, x, y){
 	//starts the player as an x sprite
 	this.animations.play("x");
 
+	//sets to correct size with correct bounds
+	this.scale.x *=.35;
+	this.scale.y *=.35;
+
 	//gets rid of current bounding box
     this.body.clearShapes();
 
@@ -26,11 +30,6 @@ Player = function (game, x, y){
     this.body.loadPolygon("spritephysics", "x0");
 
 	//this.tint = Phaser.Color.YELLOW;
-
-	//sets to correct size with correct bounds
-	this.scale.x *=.35;
-	this.scale.y *=.35;
-	this.body.setSize(200, 200);
 
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);
@@ -116,7 +115,7 @@ Player.prototype.update = function() {
     			this.body.clearShapes();
 
     			//loads up the x physics
-    			this.body.loadPolygon("spritephysics", "x0");
+    			this.body.addCircle(32);
 
 				this.tint = Phaser.Color.RED;
 				shapeType = 'circle';
@@ -131,7 +130,7 @@ Player.prototype.update = function() {
     			this.body.clearShapes();
 
     			//loads up the x physics
-    			this.body.loadPolygon("spritephysics", "x0");
+    			this.body.addRectangle(63, 60);
 
 				this.tint = Phaser.Color.BLUE;
 				shapeType = 'square';
