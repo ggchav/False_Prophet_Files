@@ -39,13 +39,13 @@ Tutorial.prototype = {
 
 		//load sounds into an array
 		for (i = 1; i < 6; i++){
-			 flee[i-1] = game.add.audio("flee"+i);
+			 flee[i-1] = game.add.audio("flee" + i);
 		}
 		for (i = 1; i < 6; i++){
-			 anger[i-1] = game.add.audio("anger"+i);
+			 anger[i-1] = game.add.audio("anger" + i);
 		}
 		for (i = 1; i < 6; i++){
-			 follow[i-1] = game.add.audio("follow"+i);
+			 follow[i-1] = game.add.audio("follow" + i);
 		}
 
 		//initialize the tilesprite for the background
@@ -66,19 +66,16 @@ Tutorial.prototype = {
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
 
-		overlay = game.add.image(0,0,'overlay');
+		overlay = game.add.image(0, 0, 'overlay');
 
 		overlay.fixedToCamera = true;
 		game.camera.follow(player);
 
-		// turn on impact events (MANDATORY for collision callbacks)
-		game.physics.p2.setImpactEvents(true);
-
 		//creates enemies from prefabs and adds them to the shape group
 		for (i = 0; i < 4; i++){
-			triangle[i] = new Enemy(game, 1000 + i*110, 500, 'triangle');
-			circle[i] = new Enemy(game, 1500 + i*110, 900, 'circle');
-			square[i] = new Enemy(game, 1000 + i*110, 1300, 'square');
+			triangle[i] = new Enemy(game, 1000 + i * 110, 500, 'triangle');
+			circle[i] = new Enemy(game, 1500 + i * 110, 900, 'circle');
+			square[i] = new Enemy(game, 1000 + i * 110, 1300, 'square');
 
 			shapeGroup.add(triangle[i]);
 			shapeGroup.add(circle[i]);
@@ -88,14 +85,13 @@ Tutorial.prototype = {
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
 			square[i].body.setCollisionGroup(squareCollisionGroup);
 
-
-			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			triangle[i].body.collides(triangleCollisionGroup);
+			circle[i].body.collides(circleCollisionGroup);
+			square[i].body.collides(squareCollisionGroup);
 
 			triangle[i].body.createBodyCallback(squareCollisionGroup, this.killShape, this);
-			circle[i].body.createBodyCallback(circleCollisionGroup, this.killShape, this);
-			square[i].body.createBodyCallback(triangleCollisionGroup, this.killShape, this);
+			circle[i].body.createBodyCallback(triangleCollisionGroup, this.killShape, this);
+			square[i].body.createBodyCallback(circleCollisionGroup, this.killShape, this);
 
 		}
 
@@ -111,9 +107,9 @@ Tutorial.prototype = {
 
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
-			this.shapeMovement(triangle,'triangle', 'circle', 'square');
-			this.shapeMovement(circle,'circle', 'square', 'triangle');
-			this.shapeMovement(square,'square', 'triangle', 'circle');
+			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
+			this.shapeMovement(circle, 'circle', 'square', 'triangle');
+			this.shapeMovement(square, 'square', 'triangle', 'circle');
 		}
 		/*
 		if (player.cooldown > 0){
@@ -124,7 +120,7 @@ Tutorial.prototype = {
 
 		//For seperating similar shapes
 		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
-		deathEmitter.forEachAlive(function(p){p.alpha= p.lifespan / deathEmitter.lifespan; });
+		deathEmitter.forEachAlive(function(p){p.alpha = p.lifespan / deathEmitter.lifespan; });
 
 		//game.physics.arcade.collide(triangle, triangle);
 		//game.physics.arcade.collide(circle, circle);
@@ -177,7 +173,7 @@ Tutorial.prototype = {
 				var maxPlaying = false;
 				//counts the sounds playing to track maxSound limit
 				var counter = 0;
-				var rng = Math.floor(Math.random()*5);
+				var rng = Math.floor(Math.random() * 5);
 				for (i=0; i<5; i++){
 					if (typeArray[i].isPlaying == true){
 						counter ++;
@@ -191,7 +187,7 @@ Tutorial.prototype = {
 				}
 				if (!maxPlaying){
 					//calls the sound array for that sound type[picksrandom] play passes soundVol
-					typeArray[rng].play(null, 0,soundVol,false,false);
+					typeArray[rng].play(null, 0, soundVol, false, false);
 				}	
 			}
 			//shapesightRange will be the max distance shapes will anger other shapes
@@ -227,7 +223,7 @@ Tutorial.prototype = {
 					if(player.body.x + 35 < enemy.body.x){
 						enemy.body.velocity.x = fleeSpeed;
 					}
-					else if(player.body.x -35 > enemy.body.x){
+					else if(player.body.x - 35 > enemy.body.x){
 						enemy.body.velocity.x = -1 * fleeSpeed;
 					}
 					else{
@@ -236,7 +232,7 @@ Tutorial.prototype = {
 					if(player.body.y + 35 < enemy.body.y){
 						enemy.body.velocity.y = fleeSpeed;
 					}
-					else if(player.body.y -35 > enemy.body.y){
+					else if(player.body.y - 35 > enemy.body.y){
 						enemy.body.velocity.y = -1 * fleeSpeed;
 					}
 					else{
@@ -287,8 +283,8 @@ Tutorial.prototype = {
 	deathEmitter.setAlpha(0.3, 1);				
 	deathEmitter.minParticleScale = 0.04;		
 	deathEmitter.maxParticleScale = .13;
-	deathEmitter.setXSpeed(-200,200);			
-	deathEmitter.setYSpeed(-200,200);			
+	deathEmitter.setXSpeed(-200, 200);			
+	deathEmitter.setYSpeed(-200, 200);			
 	//start emitting 150 particles that disappear after 1500ms
 	deathEmitter.start(true, 1500, null, 150);
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
@@ -306,7 +302,7 @@ Tutorial.prototype = {
 	
 	killPlayer: function(playershape, shapes){
 		//kills the player when collided with any shape
-		this.createParticles(player,false);
+		this.createParticles(player, false);
 		player.animations.stop();
 		player.destroyed = true;
 		player.kill();

@@ -19,8 +19,8 @@ Player = function (game, x, y){
 	this.animations.play("x");
 
 	//sets to correct size with correct bounds
-	this.scale.x *=.35;
-	this.scale.y *=.35;
+	this.scale.x *= .35;
+	this.scale.y *= .35;
 
 	//gets rid of current bounding box
     this.body.clearShapes();
@@ -28,7 +28,8 @@ Player = function (game, x, y){
     //loads up the x physics
     this.body.loadPolygon("spritephysics", "x0");
 
-	//this.tint = Phaser.Color.YELLOW;
+    this.body.kinematic = true;
+    this.body.updateCollisionMask();
 
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);
@@ -55,9 +56,9 @@ Player.prototype.createParticles = function(){
 	deathEmitter.setAlpha(0.3, 1);				
 	deathEmitter.minParticleScale = 0.05;		
 	deathEmitter.maxParticleScale = .25;
-	deathEmitter.setXSpeed(-100+this.body.velocity.x,100+this.body.velocity.x);			
-	deathEmitter.setYSpeed(-100+this.body.velocity.y,100+this.body.velocity.y);
-	deathEmitter.gravity =0;		
+	deathEmitter.setXSpeed(-100 + this.body.velocity.x, 100 + this.body.velocity.x);			
+	deathEmitter.setYSpeed(-100 + this.body.velocity.y, 100 + this.body.velocity.y);
+	deathEmitter.gravity = 0;		
 	//start emitting 200 particles that disappear after 2000ms
 	deathEmitter.start(true, 1300, null, 50);
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.

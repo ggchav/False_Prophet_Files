@@ -48,7 +48,8 @@ Enemy = function (game, x, y, type) {
 		this.body.addCircle(20);
 	}
 
-	this.body.static = true;
+	this.body.kinematic = true;
+	this.body.updateCollisionMask();
 
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);
@@ -69,8 +70,8 @@ Enemy.prototype.createParticles = function(){
 	deathEmitter.setAlpha(0.3, 1);				
 	deathEmitter.minParticleScale = 0.04;		
 	deathEmitter.maxParticleScale = .13;
-	deathEmitter.setXSpeed(-300,300);			
-	deathEmitter.setYSpeed(-300,300);			
+	deathEmitter.setXSpeed(-300, 300);			
+	deathEmitter.setYSpeed(-300, 300);			
 	//start emitting 200 particles that disappear after 2000ms
 	deathEmitter.start(true, 2000, null, 200);
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
