@@ -19,6 +19,9 @@ var Tutorial = function(game){};
 Tutorial.prototype = {
 
 	create: function() {
+		//set the bounds of the level
+		game.world.setBounds(0, 0, 3600, 1800);
+
 		//starts up the p2 physics
 		game.physics.startSystem(Phaser.Physics.P2JS);
 
@@ -33,9 +36,6 @@ Tutorial.prototype = {
     	var triangleCollisionGroup = game.physics.p2.createCollisionGroup();
     	var squareCollisionGroup = game.physics.p2.createCollisionGroup();
     	var circleCollisionGroup = game.physics.p2.createCollisionGroup();
-
-		//set the bounds of the level
-		game.world.setBounds(0, 0, 3600, 1800);
 
 		//load sounds into an array
 		for (i = 1; i < 6; i++){
@@ -71,6 +71,9 @@ Tutorial.prototype = {
 		overlay.fixedToCamera = true;
 		game.camera.follow(player);
 
+		// turn on impact events (MANDATORY for collision callbacks)
+		game.physics.p2.setImpactEvents(true);
+
 		//creates enemies from prefabs and adds them to the shape group
 		for (i = 0; i < 4; i++){
 			triangle[i] = new Enemy(game, 1000 + i*110, 500, 'triangle');
@@ -90,15 +93,13 @@ Tutorial.prototype = {
 			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-			triangle[i].body.collides(squareCollisionGroup, this.killShape, this);
-			circle[i].body.collides(circleCollisionGroup, this.killShape, this);
-			square[i].body.collides(triangleCollisionGroup, this.killShape, this);
+			triangle[i].body.createBodyCallback(squareCollisionGroup, this.killShape, this);
+			circle[i].body.createBodyCallback(circleCollisionGroup, this.killShape, this);
+			square[i].body.createBodyCallback(triangleCollisionGroup, this.killShape, this);
 
 		}
 
-		player.body.collides(triangleCollisionGroup, this.killPlayer, this);
-		player.body.collides(circleCollisionGroup, this.killPlayer, this);
-		player.body.collides(squareCollisionGroup, this.killPlayer, this);
+		player.body.createBodyCallback(shapeGroup, this.killPlayer, this);;
 
 	},
 
@@ -153,6 +154,8 @@ Tutorial.prototype = {
 			var fleeSpeed = 200;
 			//how quickly a shape runs toward the player aggresively
 			var angerSpeed = 220;
+			//how quickly a shape follows the player
+			var followSpeed = 150;
 			//how close a shape has to be to "see" the player shape and react
 			var sightRange = 500;
 			//the approximate proximity following shapes will go before they stop moving toward player
@@ -199,7 +202,11 @@ Tutorial.prototype = {
        			if (shapeCanSeePlayer){
        				shapeSound(follow);
        				if (playerShapeDist >= 120){
-       					//game.physics.arcade.moveToObject(enemy, player, 100, 2000);
+						var dx = player.body.x - enemy.x;
+       					var dy = player.body.y - enemy.y;
+       					var angle = Math.atan2(dy, dx) + game.math.degToRad(-90) + (Math.PI / 2);
+       					enemy.body.velocity.x = followSpeed * Math.cos(angle);
+						enemy.body.velocity.y = followSpeed * Math.sin(angle);
        				}
 					else{
 						enemy.body.velocity.x = 0;
@@ -246,7 +253,11 @@ Tutorial.prototype = {
 			else if (player.shapeType() == strong || player.shapeType() == 'x'){
 				if(shapeCanSeePlayer){
 					shapeSound(anger);
-					//game.physics.arcade.moveToObject(enemy, player, angerSpeed);
+					var dx = player.body.x - enemy.x;
+       				var dy = player.body.y - enemy.y;
+       				var angle = Math.atan2(dy, dx) + game.math.degToRad(-90) + (Math.PI / 2);
+       				enemy.body.velocity.x = angerSpeed * Math.cos(angle);
+					enemy.body.velocity.y = angerSpeed * Math.sin(angle);
 				}
 				else{
 					enemy.body.velocity.x = 0;

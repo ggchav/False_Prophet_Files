@@ -4,9 +4,8 @@ Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 
-	//enables physics and colliding on the world bounds
+	//enables physics
 	this.game.physics.p2.enable(this, false);
-	this.body.collideWorldBounds = true;
 
 	//this.shapetype = 'triangle'
 
@@ -120,8 +119,6 @@ Player.prototype.update = function() {
 				this.tint = Phaser.Color.RED;
 				shapeType = 'circle';
 				this.createParticles();
-				
-				
 		}
 		else if(lKey.justDown && shapeCooldown == 0){
 				this.animations.play('square');
