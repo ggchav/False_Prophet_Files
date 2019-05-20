@@ -20,30 +20,19 @@ Enemy = function (game, x, y, type) {
 	//sets to correct size with correct bounds
 	this.scale.x *= .22;
 	this.scale.y *= .22;
-
+	//gets rid of current bounding box
+	this.body.clearShapes();
 	if(type == "triangle"){
-
-		//gets rid of current bounding box
-		this.body.clearShapes();
-
 		//loads up the triangle physics
 		this.body.loadPolygon("spritephysics", "triangle1");
 	}
 	
 	else if(type == "square"){
-
-		//gets rid of current bounding box
-		this.body.clearShapes();
-
 		//loads up the triangle physics
 		this.body.addRectangle(40, 37);
 	}
 
 	else{
-
-		//gets rid of current bounding box
-		this.body.clearShapes();
-
 		//loads up the triangle physics
 		this.body.addCircle(20);
 	}

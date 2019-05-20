@@ -47,10 +47,6 @@ Tutorial.prototype = {
 
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1280, 720, 'background');
-		
-		//create the group used for the enemy shapes
-		shapeGroup = game.add.group();
-		shapeGroup.enableBody = true;
 
 		//create the player from the prefab
 		player = new Player(game, 600, 865);
@@ -59,6 +55,7 @@ Tutorial.prototype = {
 
 		//reset player shape type
 		player.reset();
+		//declare a death emitter so that function can later call it with new params easily
 		deathEmitter = game.add.emitter(player.x, player.y, 100);
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
@@ -74,10 +71,6 @@ Tutorial.prototype = {
 			circle[i] = new Enemy(game, 1500 + i * 110, 900, 'circle');
 			square[i] = new Enemy(game, 1000 + i * 110, 1300, 'square');
 
-			shapeGroup.add(triangle[i]);
-			shapeGroup.add(circle[i]);
-			shapeGroup.add(square[i]);
-/*
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
 			square[i].body.setCollisionGroup(squareCollisionGroup);
@@ -85,16 +78,17 @@ Tutorial.prototype = {
 			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-*/
-			triangle[i].body.createBodyCallback(square[i], this.killShape, this);
-			circle[i].body.createBodyCallback(triangle[i], this.killShape, this);
-			square[i].body.createBodyCallback(circle[i], this.killShape, this);
+
+			triangle[i].body.collides(squareCollisionGroup, this.killShape, this);
+			circle[i].body.collides(triangleCollisionGroup, this.killShape, this);
+			square[i].body.collides(circleCollisionGroup, this.killShape, this);
+
 
 		}
-
-		player.body.createBodyCallback(square, this.killPlayer, this);
-		player.body.createBodyCallback(triangle, this.killPlayer, this);
-		player.body.createBodyCallback(circle, this.killPlayer, this);
+ // Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
+		player.body.collides(squareCollisionGroup, this.killPlayer, this);
+		player.body.collides(triangleCollisionGroup, this.killPlayer, this);
+		player.body.collides(circleCollisionGroup, this.killPlayer, this);
 
 	},
 
@@ -280,7 +274,8 @@ Tutorial.prototype = {
 		//kills shapes when they collide
 		console.log("createParticles called...");
 		this.createParticles(weak, true);
-		//weak.kill();
+		//weak.destroy();
+		weak.sprite.kill();
 	},
 	
 	killPlayer: function(playershape, shapes){
