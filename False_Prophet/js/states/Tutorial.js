@@ -157,7 +157,7 @@ Tutorial.prototype = {
 					if (typeArray[i].isPlaying == true){
 						counter ++;
 						//tween sound to not abruptly adjust to the distance the shape is from player
-						game.add.tween(flee[i].volume).to({volume:soundVol}, 500).start();
+						game.add.tween(typeArray[i].volume).to({volume:soundVol}, 500).start();
 					}
 				}
 				//only play sound if max amount of audio isn't playing using maxPlaying bool 
