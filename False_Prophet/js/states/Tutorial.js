@@ -86,26 +86,21 @@ Tutorial.prototype = {
 			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 */
-			triangle[i].body.createBodyCallback(squareCollisionGroup, this.killShape, this);
-			circle[i].body.createBodyCallback(triangleCollisionGroup, this.killShape, this);
-			square[i].body.createBodyCallback(circleCollisionGroup, this.killShape, this);
+			triangle[i].body.createBodyCallback(square[i], this.killShape, this);
+			circle[i].body.createBodyCallback(triangle[i], this.killShape, this);
+			square[i].body.createBodyCallback(circle[i], this.killShape, this);
 
 		}
-		
-		//player.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup])
 
-		player.body.createBodyCallback(squareCollisionGroup, this.killPlayer, this);
-		player.body.createBodyCallback(triangleCollisionGroup, this.killPlayer, this);
-		player.body.createBodyCallback(circleCollisionGroup, this.killPlayer, this);
+		player.body.createBodyCallback(square, this.killPlayer, this);
+		player.body.createBodyCallback(triangle, this.killPlayer, this);
+		player.body.createBodyCallback(circle, this.killPlayer, this);
 
 	},
 
 	update: function() {
 	// checks if player is destroyed before running these
 		if (!player.destroyed){
-			//for when a shape comes into contact with a player
-			//game.physics.arcade.overlap(shapeGroup, player, this.killPlayer, null, this);
-
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
 			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
@@ -122,18 +117,7 @@ Tutorial.prototype = {
 		//For seperating similar shapes
 		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
 		deathEmitter.forEachAlive(function(p){p.alpha = p.lifespan / deathEmitter.lifespan; });
-
-		//game.physics.arcade.collide(triangle, triangle);
-		//game.physics.arcade.collide(circle, circle);
-		//game.physics.arcade.collide(square, square);
-
-		//for when an opposing shapes contact eachother
-		//game.physics.arcade.overlap(shapeGroup, shapeGroup, this.checkOverlap, null,);
-		//game.physics.arcade.overlap(triangle, square, this.killShape, null,this);
-		//game.physics.arcade.overlap(square, circle, this.killShape, null,this);
-		//game.physics.arcade.overlap(circle, triangle, this.killShape, null,this);
-		
-		
+			
 		//instructions for the camera to stay on the screen
 		if (!game.camera.atLimit.x){
         	background.tilePosition.x -= (player.body.velocity.x * game.time.physicsElapsed);
@@ -294,11 +278,9 @@ Tutorial.prototype = {
 
 	killShape: function(strong, weak){
 		//kills shapes when they collide
-		//createParticles throws an error when passed anything but the player for unknown reasons
-		//this.createParticles(weak);
 		console.log("createParticles called...");
 		this.createParticles(weak, true);
-		weak.kill();
+		//weak.kill();
 	},
 	
 	killPlayer: function(playershape, shapes){
