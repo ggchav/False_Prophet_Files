@@ -1,4 +1,8 @@
-var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+//Team 25
+//Names: Garrett Chavez, David Hunt, and Jordan Lee
+//Link to github: https://github.com/ggchav/False_Prophet_Files.git
+var game = new Phaser.Game(1000, 1000, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
 
 //initialize all states
 game.state.add('MainMenu', MainMenu);
