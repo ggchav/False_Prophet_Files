@@ -1,17 +1,19 @@
 var player;
-var triangle = [];
-var square= [];
-var circle= [];
+var triangle = [6];
+var square= [6];
+var circle= [6];
+var triangleCollisionGroup;
+var squareCollisionGroup;
+var circleCollisionGroup;
+var playerCollisionGroup;
+
 //audio array for each sound type
 var flee = new Array();
 var anger = new Array();
 var follow = new Array();
 
-
-
 //var channel_max = 8;	
 //audiochannels = new Array();
-
 var shapeGroup;
 
 var Tutorial = function(game){};
@@ -29,10 +31,10 @@ Tutorial.prototype = {
     	game.physics.p2.setImpactEvents(true);
 
     	//creates p2 collsion groups
-    	var playerCollisionGroup = game.physics.p2.createCollisionGroup();
-    	var triangleCollisionGroup = game.physics.p2.createCollisionGroup();
-    	var squareCollisionGroup = game.physics.p2.createCollisionGroup();
-    	var circleCollisionGroup = game.physics.p2.createCollisionGroup();
+    	playerCollisionGroup = game.physics.p2.createCollisionGroup();
+    	triangleCollisionGroup = game.physics.p2.createCollisionGroup();
+    	squareCollisionGroup = game.physics.p2.createCollisionGroup();
+    	circleCollisionGroup = game.physics.p2.createCollisionGroup();
 
 		//load sounds into an array
 		for (i = 1; i < 6; i++){
@@ -44,17 +46,13 @@ Tutorial.prototype = {
 		for (i = 1; i < 6; i++){
 			 follow[i-1] = game.add.audio("follow" + i);
 		}
-
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1280, 720, 'background');
-
 		//create the player from the prefab
 		player = new Player(game, 600, 865);
-
-		player.body.setCollisionGroup(playerCollisionGroup);
-
 		//reset player shape type
 		player.reset();
+		player.body.setCollisionGroup(playerCollisionGroup);
 		//declare a death emitter so that function can later call it with new params easily
 		deathEmitter = game.add.emitter(player.x, player.y, 100);
 		//fix the camera with the background and make it follow the player
@@ -66,7 +64,8 @@ Tutorial.prototype = {
 		game.camera.follow(player);
 
 		//creates enemies from prefabs and adds them to the shape group
-		for (i = 0; i < 4; i++){
+		var shapeCount = 4;
+		for (i = 0; i < shapeCount; i++){
 			triangle[i] = new Enemy(game, 1000 + i * 110, 500, 'triangle');
 			circle[i] = new Enemy(game, 1500 + i * 110, 900, 'circle');
 			square[i] = new Enemy(game, 1000 + i * 110, 1300, 'square');
@@ -75,25 +74,24 @@ Tutorial.prototype = {
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
 			square[i].body.setCollisionGroup(squareCollisionGroup);
 
-			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-
 			triangle[i].body.collides(squareCollisionGroup, this.killShape, this);
 			circle[i].body.collides(triangleCollisionGroup, this.killShape, this);
 			square[i].body.collides(circleCollisionGroup, this.killShape, this);
 
-
+			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+	
 		}
  // Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
-		player.body.collides(squareCollisionGroup, this.killPlayer, this);
-		player.body.collides(triangleCollisionGroup, this.killPlayer, this);
-		player.body.collides(circleCollisionGroup, this.killPlayer, this);
-
+	player.body.collides([triangleCollisionGroup,squareCollisionGroup,circleCollisionGroup], this.killPlayer, this);
+	// player.body.collides(squareCollisionGroup, this.killPlayer, this);
+	// player.body.collides(triangleCollisionGroup, this.killPlayer, this);
+	// player.body.collides(circleCollisionGroup, this.killPlayer, this);
 	},
-
 	update: function() {
 	// checks if player is destroyed before running these
+
 		if (!player.destroyed){
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
@@ -119,6 +117,8 @@ Tutorial.prototype = {
 		if (!game.camera.atLimit.y){
         	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
 		}
+		//not a great solution, but if player is always set to the collide, changing the body type and shape won't phase it
+		player.body.setCollisionGroup(playerCollisionGroup);
 		game.world.bringToTop(overlay);
 	},
 
