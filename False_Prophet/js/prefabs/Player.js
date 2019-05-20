@@ -28,8 +28,7 @@ Player = function (game, x, y){
     //loads up the x physics
     this.body.loadPolygon("spritephysics", "x0");
 
-    this.body.kinematic = true;
-    this.body.updateCollisionMask();
+    //this.body.static = true;
 
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);

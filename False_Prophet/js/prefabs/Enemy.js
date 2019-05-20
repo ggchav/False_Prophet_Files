@@ -18,8 +18,8 @@ Enemy = function (game, x, y, type) {
 	this.animations.play(type);
 
 	//sets to correct size with correct bounds
-	this.scale.x *=.22;
-	this.scale.y *=.22;
+	this.scale.x *= .22;
+	this.scale.y *= .22;
 
 	if(type == "triangle"){
 
@@ -48,8 +48,7 @@ Enemy = function (game, x, y, type) {
 		this.body.addCircle(20);
 	}
 
-	this.body.kinematic = true;
-	this.body.updateCollisionMask();
+	//this.body.static = true;
 
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);

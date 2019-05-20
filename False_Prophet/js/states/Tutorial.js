@@ -28,9 +28,6 @@ Tutorial.prototype = {
 		//turn on impact events for the world, without this we get no collision callbacks
     	game.physics.p2.setImpactEvents(true);
 
-    	//makes sure things collide with world bounds
-    	game.physics.p2.updateBoundsCollisionGroup();
-
     	//creates p2 collsion groups
     	var playerCollisionGroup = game.physics.p2.createCollisionGroup();
     	var triangleCollisionGroup = game.physics.p2.createCollisionGroup();
@@ -80,22 +77,26 @@ Tutorial.prototype = {
 			shapeGroup.add(triangle[i]);
 			shapeGroup.add(circle[i]);
 			shapeGroup.add(square[i]);
-
+/*
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
 			square[i].body.setCollisionGroup(squareCollisionGroup);
 
-			triangle[i].body.collides(triangleCollisionGroup);
-			circle[i].body.collides(circleCollisionGroup);
-			square[i].body.collides(squareCollisionGroup);
-
+			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+*/
 			triangle[i].body.createBodyCallback(squareCollisionGroup, this.killShape, this);
 			circle[i].body.createBodyCallback(triangleCollisionGroup, this.killShape, this);
 			square[i].body.createBodyCallback(circleCollisionGroup, this.killShape, this);
 
 		}
+		
+		//player.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup])
 
-		player.body.createBodyCallback(shapeGroup, this.killPlayer, this);;
+		player.body.createBodyCallback(squareCollisionGroup, this.killPlayer, this);
+		player.body.createBodyCallback(triangleCollisionGroup, this.killPlayer, this);
+		player.body.createBodyCallback(circleCollisionGroup, this.killPlayer, this);
 
 	},
 
