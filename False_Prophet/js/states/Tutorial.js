@@ -48,7 +48,7 @@ Tutorial.prototype = {
     	circleCollisionGroup = game.physics.p2.createCollisionGroup();
 		
 		//initialize the tilesprite for the background
-		background = game.add.tileSprite(0, 0, 1280, 720, 'background');
+		background = game.add.tileSprite(0, 0, 1000, 1000, 'background');
 		// add music if it's not already playing/loaded
 		if (!music){
 			music = game.add.audio('music');
@@ -277,7 +277,8 @@ Tutorial.prototype = {
 	//start emitting 150 particles that disappear after 1500ms
 	deathEmitter.start(true, 1500, null, 150);
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
-	deathEmitter.forEach(function(item){item.tint = shape.tint;});
+	if (!enemyBool)
+		deathEmitter.forEach(function(item){item.tint = shape.tint;});
 	},
 
 	killShape: function(strong, weak){
