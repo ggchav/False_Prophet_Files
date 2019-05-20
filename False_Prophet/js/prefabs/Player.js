@@ -32,6 +32,8 @@ Player = function (game, x, y){
 
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);
+	this.body.angularDamping = .6;
+	this.body.damping = .6;
 
 	//adds the shape into the game
 	game.add.existing(this);
@@ -65,10 +67,10 @@ Player.prototype.createParticles = function(){
 }
 Player.prototype.update = function() {
 	//initialize the player movement if not moving
-	var playerSpeed = 250;
+	var playerSpeed = 270;
 	//reset speed if not moving
-	this.body.velocity.x = 0;
-	this.body.velocity.y = 0;
+	//this.body.velocity.x = 0;
+	//this.body.velocity.y = 0;
 	
 	if (!player.destroyed){
 	//Adds functionality for WASD movement

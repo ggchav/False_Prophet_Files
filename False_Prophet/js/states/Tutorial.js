@@ -13,7 +13,7 @@ var flee = new Array();
 var anger = new Array();
 var follow = new Array();
 var poofArray = new Array();
-
+var shapeCount = 10;
 //var channel_max = 8;	
 //audiochannels = new Array();
 var shapeGroup;
@@ -24,7 +24,7 @@ Tutorial.prototype = {
 
 	create: function() {
 		//set the bounds of the level
-		game.world.setBounds(0, 0, 3600, 1800);
+		game.world.setBounds(0, 0, 4000, 3000);
 
 		//load sounds into an array
 		for (i = 1; i < 6; i++){
@@ -49,6 +49,7 @@ Tutorial.prototype = {
 		
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1000, 1000, 'background');
+		
 		// add music if it's not already playing/loaded
 		if (!music){
 			music = game.add.audio('music');
@@ -59,9 +60,12 @@ Tutorial.prototype = {
 		}
 		//create the player from the prefab
 		player = new Player(game, 600, 865);
+
 		//reset player shape type
 		player.reset();
 		player.body.setCollisionGroup(playerCollisionGroup);
+		//collideworld bounds doesn't work anymore with p2
+		//player.body.collideWorldBounds = true; 
 		//declare a death emitter so that function can later call it with new params easily
 		deathEmitter = game.add.emitter(player.x, player.y, 100);
 		//fix the camera with the background and make it follow the player
@@ -73,7 +77,6 @@ Tutorial.prototype = {
 		game.camera.follow(player);
 
 		//creates enemies from prefabs and adds them to the shape group
-		var shapeCount = 4;
 		for (i = 0; i < shapeCount; i++){
 			triangle[i] = new Enemy(game, 1000 + i * 110, 500, 'triangle');
 			circle[i] = new Enemy(game, 1500 + i * 110, 900, 'circle');
@@ -97,6 +100,8 @@ Tutorial.prototype = {
 	// player.body.collides(squareCollisionGroup, this.killPlayer, this);
 	// player.body.collides(triangleCollisionGroup, this.killPlayer, this);
 	// player.body.collides(circleCollisionGroup, this.killPlayer, this);
+
+	game.physics.p2.updateBoundsCollisionGroup();
 	},
 	update: function() {
 	// checks if player is destroyed before running these
@@ -107,6 +112,13 @@ Tutorial.prototype = {
 			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
 			this.shapeMovement(circle, 'circle', 'square', 'triangle');
 			this.shapeMovement(square, 'square', 'triangle', 'circle');
+			//instructions for the camera to stay on the screen
+			if (!game.camera.atLimit.x){
+	        	background.tilePosition.x -= (player.body.velocity.x * game.time.physicsElapsed);
+			}
+			if (!game.camera.atLimit.y){
+	        	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
+			}
 		}
 		/*
 		if (player.cooldown > 0){
@@ -119,13 +131,7 @@ Tutorial.prototype = {
 		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
 		deathEmitter.forEachAlive(function(p){p.alpha = p.lifespan / deathEmitter.lifespan; });
 			
-		//instructions for the camera to stay on the screen
-		if (!game.camera.atLimit.x){
-        	background.tilePosition.x -= (player.body.velocity.x * game.time.physicsElapsed);
-		}
-		if (!game.camera.atLimit.y){
-        	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
-		}
+		
 		//not a great solution, but if player is always set to the collide, changing the body type and shape won't phase it
 		player.body.setCollisionGroup(playerCollisionGroup);
 		game.world.bringToTop(overlay);
@@ -135,13 +141,13 @@ Tutorial.prototype = {
 		//repeat for the provided shape
 		type.forEach(function(enemy){
 			//how quickly a shape runs away
-			var fleeSpeed = 200;
+			var fleeSpeed = 220;
 			//how quickly a shape runs toward the player aggresively
-			var angerSpeed = 220;
+			var angerSpeed = 240;
 			//how quickly a shape follows the player
 			var followSpeed = 150;
 			//how close a shape has to be to "see" the player shape and react
-			var sightRange = 500;
+			var sightRange = 520;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 120;
 			//shorthand to make it easier to refer to the distance between shape vs player
