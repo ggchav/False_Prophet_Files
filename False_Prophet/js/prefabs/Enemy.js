@@ -4,12 +4,12 @@ Enemy = function (game, x, y, type) {
 
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 
-	//enables physics and colliding on the world bounds
-	game.physics.enable(this);
-	this.body.collideWorldBounds = true;
-	this.type = type;
-	//adds in the three types of shape animations
+	//enables physics
+	this.game.physics.p2.enable(this, false);
 
+	this.type = type;
+
+	//adds in the three types of shape animations
 	this.animations.add("triangle", Phaser.Animation.generateFrameNames('triangle', 0, 2), 10, true, true);
 	this.animations.add("square", Phaser.Animation.generateFrameNames('square', 0, 2), 10, true, true);
 	this.animations.add("circle", Phaser.Animation.generateFrameNames('circle', 0, 2), 10, true, true);
@@ -18,9 +18,26 @@ Enemy = function (game, x, y, type) {
 	this.animations.play(type);
 
 	//sets to correct size with correct bounds
-	this.scale.x *=.22;
-	this.scale.y *=.22;
-	this.body.setSize(200, 200);
+	this.scale.x *= .22;
+	this.scale.y *= .22;
+	//gets rid of current bounding box
+	this.body.clearShapes();
+	if(type == "triangle"){
+		//loads up the triangle physics
+		this.body.loadPolygon("spritephysics", "triangle1");
+	}
+	
+	else if(type == "square"){
+		//loads up the triangle physics
+		this.body.addRectangle(40, 37);
+	}
+
+	else{
+		//loads up the triangle physics
+		this.body.addCircle(20);
+	}
+
+	//this.body.static = true;
 
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);
@@ -41,8 +58,8 @@ Enemy.prototype.createParticles = function(){
 	deathEmitter.setAlpha(0.3, 1);				
 	deathEmitter.minParticleScale = 0.04;		
 	deathEmitter.maxParticleScale = .13;
-	deathEmitter.setXSpeed(-300,300);			
-	deathEmitter.setYSpeed(-300,300);			
+	deathEmitter.setXSpeed(-300, 300);			
+	deathEmitter.setYSpeed(-300, 300);			
 	//start emitting 200 particles that disappear after 2000ms
 	deathEmitter.start(true, 2000, null, 200);
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
