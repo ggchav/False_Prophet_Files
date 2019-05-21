@@ -19,8 +19,8 @@ Player = function (game, x, y){
 	this.animations.play("x");
 
 	//sets to correct size with correct bounds
-	this.scale.x *= .35;
-	this.scale.y *= .35;
+	this.scale.x *= .28;
+	this.scale.y *= .28;
 
 	//gets rid of current bounding box
     this.body.clearShapes();

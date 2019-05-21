@@ -18,8 +18,8 @@ Enemy = function (game, x, y, type) {
 	this.animations.play(type);
 
 	//sets to correct size with correct bounds
-	this.scale.x *= .22;
-	this.scale.y *= .22;
+	this.scale.x *= .18;
+	this.scale.y *= .18;
 	//gets rid of current bounding box
 	this.body.clearShapes();
 	if(type == "triangle"){
@@ -43,6 +43,7 @@ Enemy = function (game, x, y, type) {
 	this.anchor.set(0.5);
 
 	//adds the shape into the game
+	this.body.angularDamping = .6;
 	game.add.existing(this);
 
 };

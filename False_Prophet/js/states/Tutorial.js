@@ -51,7 +51,7 @@ Tutorial.prototype = {
     	circleCollisionGroup = game.physics.p2.createCollisionGroup();
 		
 		//initialize the tilesprite for the background
-		background = game.add.tileSprite(0, 0, 1000, 1000, 'background');
+		background = game.add.tileSprite(0, 0, 700, 700, 'background');
 		
 		// add music if it's not already playing/loaded
 		if (!music){
@@ -79,6 +79,8 @@ Tutorial.prototype = {
 
 		//adds an overlay to the game
 		overlay = game.add.image(0, 0, 'overlay');
+		overlay.scale.x = .7;
+		overlay.scale.y = .7;
 
 		//fixes the overlay to the camera
 		overlay.fixedToCamera = true;
