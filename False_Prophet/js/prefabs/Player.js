@@ -1,8 +1,8 @@
 var shapeType = 'x';
 var transformSound;
-var cooldownDuration = 14; //includes the 8 seconds of disguise
+var cooldownDuration = 6; //includes the 8 seconds of disguise
 var animateSpeed = 500; // 500 milliseconds
-var disguiseDuration = 8; // 8 seconds
+var disguiseDuration = 4; // 8 seconds
 Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
@@ -88,7 +88,7 @@ Player.prototype.updateTimer = function(){
 Player.prototype.animate = function(){
 	if (this.cooldownLeft <= 1){
 		var newtint = Math.random() * 0xffffff;
-		this.tweenTint(this, this.tint, newtint,animateSpeed);
+		this.tweensTint(this, this.tint, newtint,animateSpeed);
 		//console.log("animate function running");
 	} else{
 		this.tint = 0x181818;
@@ -96,7 +96,7 @@ Player.prototype.animate = function(){
 	//this.tint = Math.random() * 0xffffff;
 	
 }
-Player.prototype.tweenTint = function(spriteobj, startColor, endColor, time) {    // create an object to tween with our step value at 0    
+Player.prototype.tweensTint = function(spriteobj, startColor, endColor, time) {    // create an object to tween with our step value at 0    
 	var colorBlend = {step: 0};   
 	// create the tween on this object and tween its step property to 100
 	var colorTween = game.add.tween(colorBlend).to({step: 100}, time);        

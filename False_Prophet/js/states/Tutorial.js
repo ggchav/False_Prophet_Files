@@ -66,7 +66,7 @@ Tutorial.prototype = {
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 450, 450);
+		player = new Player(game, 1950, 450);
 
 		//reset player shape type
 		player.reset(false);
@@ -233,7 +233,7 @@ Tutorial.prototype = {
 	},
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
-		type.forEach(function(enemy){
+		type.forEach( enemyloop = function(enemy){
 			//how quickly a shape runs away
 			var fleeSpeed = 220;
 			//how quickly a shape runs toward the player aggresively
@@ -244,6 +244,8 @@ Tutorial.prototype = {
 			var sightRange = 520;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 120;
+			//how quickly enemy color changes to reflect how the feel about your shape type
+			var enemyTweenSpeed = 600;
 			//shorthand to make it easier to refer to the distance between shape vs player
 			var playerShapeDist = Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y);
 			//withinSightRange bool returns true if a shape can see a player
@@ -279,13 +281,25 @@ Tutorial.prototype = {
 					typeArray[rng].play(null, 0, soundVol, false, false);
 				}	
 			}
-			//shapesightRange will be the max distance shapes will anger other shapes
-			//not implemented yet
-			//var	shapeSightRange = 150;
+
+			function tweenTint(spriteobj, startColor, endColor, time) {    // create an object to tween with our step value at 0    
+				var colorBlend = {step: 0};   
+				// create the tween on this object and tween its step property to 100
+				var colorTween = game.add.tween(colorBlend).to({step: 100}, time);        
+				// run the interpolateColor function every time the tween updates, feeding it the   
+				// updated value of our tween each time, and set the result as our tint   
+				colorTween.onUpdateCallback(function() {spriteobj.tint = Phaser.Color.interpolateColor(startColor, endColor, 100, colorBlend.step);﻿});
+				// start the tween    
+				colorTween.start();
+				
+			}
 			//shape follows the player if the are the same shape, never getting too close
        		if (player.shapeType() == same){
        			if (shapeCanSeePlayer){
        				shapeSound(follow);
+       				//tween enemy color to be the follow color
+       				enemy.tint= Phaser.Color.GREEN;
+       				//tweenTint(enemy, enemy.tint, Phaser.Color.GREEN, enemyTweenSpeed);
        				if (playerShapeDist >= 120){
 						var dx = player.body.x - enemy.x;
        					var dy = player.body.y - enemy.y;
@@ -304,6 +318,8 @@ Tutorial.prototype = {
 			else if (player.shapeType() == weak){
 				if(shapeCanSeePlayer){
        				shapeSound(flee);
+					enemy.tint= Phaser.Color.YELLOW;
+       				//tweenTint(enemy, enemy.tint, Phaser.Color.YELLOW, enemyTweenSpeed);
 					//changes fleespeed if closer to the player
 					if(playerShapeDist <= 150){
 						fleeSpeed = fleeSpeed * 1.8;
@@ -338,6 +354,8 @@ Tutorial.prototype = {
 			else if (player.shapeType() == strong || player.shapeType() == 'x'){
 				if(shapeCanSeePlayer){
 					shapeSound(anger);
+					enemy.tint = Phaser.Color.RED;
+					//tweenTint(enemy, enemy.tint, Phaser.Color.RED, enemyTweenSpeed);
 					var dx = player.body.x - enemy.x;
        				var dy = player.body.y - enemy.y;
        				var angle = Math.atan2(dy, dx) + game.math.degToRad(-90) + (Math.PI / 2);
@@ -358,26 +376,28 @@ Tutorial.prototype = {
        	});
 	},
 	createParticles: function(shape,enemyBool){
-	//kills shapes when they collide
-	deathEmitter = game.add.emitter(shape.x, shape.y, 100);
-	//if the passed shape is an enemy, enemy bool is true
-	
-	if (!enemyBool){
-		deathEmitter.makeParticles(shape.shapeType());
-	} else{
-		deathEmitter.makeParticles('smoke');
-	}
-	//set particle properties including alpha, particle size and speed
-	
-	deathEmitter.setAlpha(0.3, 1);				
-	deathEmitter.minParticleScale = 0.04;		
-	deathEmitter.maxParticleScale = .13;
-	deathEmitter.setXSpeed(-200, 200);			
-	deathEmitter.setYSpeed(-200, 200);			
-	//start emitting 150 particles that disappear after 1500ms
-	deathEmitter.start(true, 1500, null, 150);
-	//loop through each particle and change it's tint to the color of the player's tint at time of death.
-	if (!enemyBool)
+		//kills shapes when they collide
+		deathEmitter = game.add.emitter(shape.x, shape.y, 100);
+		//if the passed shape is an enemy, enemy bool is true
+		var size = 1;
+		var spread = 1;
+		if (!enemyBool){
+			deathEmitter.makeParticles(shape.shapeType());
+		} else{
+			deathEmitter.makeParticles('smoke');
+			size = 3;
+			spread = .7;
+		}
+		//set particle properties including alpha, particle size and speed
+		deathEmitter.setAlpha(0.3, 1*spread);				
+		deathEmitter.minParticleScale = 0.04;		
+		deathEmitter.maxParticleScale = .13*size;
+		var speed = 200 * spread;
+		deathEmitter.setXSpeed(-speed,speed);			
+		deathEmitter.setYSpeed(-speed,speed);			
+		//start emitting 150 particles that disappear after 1500ms
+		deathEmitter.start(true, 1500, null, 150);
+		//loop through each particle and change it's tint to the color of the player's tint at time of death.
 		deathEmitter.forEach(function(item){item.tint = shape.tint;});
 	},
 
@@ -387,7 +407,12 @@ Tutorial.prototype = {
 		//this.createParticles(weak);
 		var rng = Math.floor(Math.random()*3);
 		//calls the puffsound array for that sound type[picksrandom] play passes soundVol
-		poofArray[rng].play(null, 0, 1,false,false);
+		var shapeDist = Phaser.Math.distance(player.body.x, player.body.y, weak.body.x, weak.body.y);
+		var soundVol = (500 - shapeDist)/1000;
+		if (soundVol > .6){
+					soundVol = .6;
+		}
+		poofArray[rng].play(null, 0, soundVol,false,false);
 		this.createParticles(weak, true);
 		//weak.destroy();
 		weak.sprite.kill();
