@@ -2,6 +2,7 @@ var player;
 var triangle = [];
 var square= [];
 var circle= [];
+var barrier;
 var music;
 
 var triangleCollisionGroup;
@@ -15,8 +16,6 @@ var anger = new Array();
 var follow = new Array();
 var poofArray = new Array();
 
-var shapeCount = 10;
-
 //var channel_max = 8;	
 //audiochannels = new Array();
 
@@ -26,7 +25,7 @@ Tutorial.prototype = {
 
 	create: function() {
 		//set the bounds of the level
-		game.world.setBounds(0, 0, 4000, 3000);
+		game.world.setBounds(0, 0, 3000, 2500);
 
 		//load sounds into arrays
 		for (i = 1; i < 6; i++){
@@ -49,6 +48,7 @@ Tutorial.prototype = {
     	triangleCollisionGroup = game.physics.p2.createCollisionGroup();
     	squareCollisionGroup = game.physics.p2.createCollisionGroup();
     	circleCollisionGroup = game.physics.p2.createCollisionGroup();
+    	barrierCollisionGroup = game.physics.p2.createCollisionGroup();
 		
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 1000, 1000, 'background');
@@ -64,7 +64,7 @@ Tutorial.prototype = {
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 600, 865);
+		player = new Player(game, 450, 450);
 
 		//reset player shape type
 		player.reset();
@@ -86,11 +86,75 @@ Tutorial.prototype = {
 		//makes the camera follow the player
 		game.camera.follow(player);
 
-		//creates enemies from prefabs and adds them to the shape group
-		for (i = 0; i < shapeCount; i++){
-			triangle[i] = new Enemy(game, 1000 + i * 110, 500, 'triangle');
-			circle[i] = new Enemy(game, 1500 + i * 110, 900, 'circle');
-			square[i] = new Enemy(game, 1000 + i * 110, 1300, 'square');
+		//creates black space in big divider
+		var graphics = game.add.graphics(0, 0);
+		graphics.beginFill(0x000000);
+		graphics.lineStyle(10, 0x000000, 1);
+		graphics.drawRect(0, 765, 1900, 990);
+
+		//declares all barriers used for the level
+		for (i = 0; i < 8; i++){
+			//barriers for the big dividers top and bottom
+			barrier = new Barrier(game, i * 250, 775, 90, 0x5b5b5b);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			barrier = new Barrier(game, i * 250, 1745, 90, 0x5b5b5b);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+
+			if(i % 2 == 0){
+				//barriers for the big dividers side
+				barrier = new Barrier(game, 1890, 885 + ((i/2) * 250), 0, 0x5b5b5b);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			}
+
+			if(i % 3 == 0){
+				//barriers for individual shape boxes
+				barrier = new Barrier(game, 2490, 500 + ((i/3) * 400), 0, 0xe2e2e2);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+				barrier = new Barrier(game, 2760, 500 + ((i/3) * 400), 0, 0xe2e2e2);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+				barrier = new Barrier(game, 2625, 390 + ((i/3) * 400), 90, 0xe2e2e2);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+				barrier = new Barrier(game, 2625, 610 + ((i/3) * 400), 90, 0xe2e2e2);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+
+				//barriers for tops and bottoms of big box
+				barrier = new Barrier(game, 2325 + ((i/3) * 250), 2090, 90, 0xe2e2e2);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+				barrier = new Barrier(game, 2325 + ((i/3) * 250), 2310, 90, 0xe2e2e2);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+
+			}
+
+			if(i % 4 == 0){
+				//barriers for sides of big box
+				barrier = new Barrier(game, 2190 + ((i/4) * 770), 2200, 0, 0xe2e2e2);
+				barrier.body.setCollisionGroup(barrierCollisionGroup);
+				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			}
+
+		}
+
+		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
+		for (i = 0; i < 2; i++){
+			if(i == 0){
+				triangle[i] = new Enemy(game, 2600, 600, 'triangle');
+				circle[i] = new Enemy(game, 2600, 1000, 'circle');
+				square[i] = new Enemy(game, 2600, 1400, 'square');
+			}
+			else{
+				triangle[i] = new Enemy(game, 2300, 2150, 'triangle');
+				circle[i] = new Enemy(game, 2500, 2150, 'circle');
+				square[i] = new Enemy(game, 2700, 2150, 'square');
+			}
 
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
@@ -100,13 +164,15 @@ Tutorial.prototype = {
 			circle[i].body.collides(triangleCollisionGroup, this.killShape, this);
 			square[i].body.collides(circleCollisionGroup, this.killShape, this);
 
-			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup, barrierCollisionGroup]);
+			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup, barrierCollisionGroup]);
+			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup, barrierCollisionGroup]);
 	
 		}
+	
 	// Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
 	player.body.collides([triangleCollisionGroup,squareCollisionGroup,circleCollisionGroup], this.killPlayer, this);
+	player.body.collides(barrierCollisionGroup);
 
 	//neccessary for the collisions of p2
 	game.physics.p2.updateBoundsCollisionGroup();
