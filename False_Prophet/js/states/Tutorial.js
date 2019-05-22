@@ -64,7 +64,7 @@ Tutorial.prototype = {
 		if (!music.isPlaying){
 			music.play(null, 0,.65,true);
 		}
-
+			controls = game.add.image(1200, 500, 'shapekey');
 		//create the player from the prefab
 		player = new Player(game, 1950, 450);
 
@@ -89,7 +89,6 @@ Tutorial.prototype = {
 
 		//makes the camera follow the player
 		game.camera.follow(player);
-
 		//creates black space in big divider
 		var graphics = game.add.graphics(0, 0);
 		graphics.beginFill(0x000000);
@@ -216,8 +215,7 @@ Tutorial.prototype = {
     	menuLabel.cameraOffset.setTo(game.width/2, game.height - 18);
 		game.world.bringToTop(menuLabel);
 
-		if (player.cooldownLeft < 1){
-
+		if (player.cooldownLeft < .1){
 			menuLabel.alpha = 0;
 		} else{
 			menuLabel.alpha = 1;

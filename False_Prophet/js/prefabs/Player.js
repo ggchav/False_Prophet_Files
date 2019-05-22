@@ -1,8 +1,8 @@
 var shapeType = 'x';
 var transformSound;
-var cooldownDuration = 6; //includes the 8 seconds of disguise
+var cooldownDuration = 5; //includes the 8 seconds of disguise
 var animateSpeed = 500; // 500 milliseconds
-var disguiseDuration = 4; // 8 seconds
+var disguiseDuration = 3; // 8 seconds
 Player = function (game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
@@ -71,13 +71,12 @@ Player.prototype.startcooldownLeft = function(){
 	this.tint = 0x181818;
 	timer.loop(1000, this.updateTimer, this);
 	timer.start();
-	console.log("starting cooldownLeft...");
 }
 Player.prototype.updateTimer = function(){
 	this.cooldownLeft --;
 	this.disguiseLeft --;
 
-	if (this.cooldownLeft <= 1){
+	if (this.cooldownLeft <= 0){
 		this.cooldownLeft = 0;
 		timer.stop();
 	}
@@ -86,7 +85,7 @@ Player.prototype.updateTimer = function(){
 	}	
 }
 Player.prototype.animate = function(){
-	if (this.cooldownLeft <= 1){
+	if (this.cooldownLeft <= 0){
 		var newtint = Math.random() * 0xffffff;
 		this.tweensTint(this, this.tint, newtint,animateSpeed);
 		//console.log("animate function running");
@@ -157,7 +156,7 @@ Player.prototype.update = function() {
 		var kKey = game.input.keyboard.addKey(Phaser.Keyboard.K);
 		var lKey = game.input.keyboard.addKey(Phaser.Keyboard.L);
 
-		if(jKey.justDown && this.cooldownLeft <= 1){
+		if(jKey.justDown && this.cooldownLeft <= 0){
 				this.animations.play('triangle');
 
 				//gets rid of current bounding box
@@ -174,7 +173,7 @@ Player.prototype.update = function() {
 				
    				this.startcooldownLeft();
 		}
-		else if(kKey.justDown && this.cooldownLeft <= 1){
+		else if(kKey.justDown && this.cooldownLeft <= 0){
 				this.animations.play('circle');
 
 				//gets rid of current bounding box
@@ -190,7 +189,7 @@ Player.prototype.update = function() {
 
 				this.startcooldownLeft();
 		}
-		else if(lKey.justDown && this.cooldownLeft <= 1){
+		else if(lKey.justDown && this.cooldownLeft <= 0){
 				this.animations.play('square');
 
 				//gets rid of current bounding box
