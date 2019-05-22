@@ -15,6 +15,8 @@ var anger = new Array();
 var follow = new Array();
 var poofArray = new Array();
 
+var menuLabel;
+
 var shapeCount = 10;
 
 //var channel_max = 8;	
@@ -67,7 +69,7 @@ Tutorial.prototype = {
 		player = new Player(game, 600, 865);
 
 		//reset player shape type
-		player.reset();
+		player.reset(false);
 
 		player.body.setCollisionGroup(playerCollisionGroup);
 
@@ -109,10 +111,12 @@ Tutorial.prototype = {
 		}
 	// Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
 	player.body.collides([triangleCollisionGroup,squareCollisionGroup,circleCollisionGroup], this.killPlayer, this);
-
 	//neccessary for the collisions of p2
 	game.physics.p2.updateBoundsCollisionGroup();
-	
+
+	menuLabel = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
+	menuLabel.anchor.setTo(.5);
+	//player.addChild(menuLabel);
 	},
 	update: function() {
 	// checks if player is destroyed before running these
@@ -131,13 +135,6 @@ Tutorial.prototype = {
 	        	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
 			}
 		}
-		/*
-		if (player.cooldown > 0){
-			this.timer = this.game.time.events.loop(Phaser.Timer.SECOND, this.updateTimer, this);
-
-		}
-		*/
-
 		//For seperating similar shapes
 		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
 		deathEmitter.forEachAlive(function(p){p.alpha = p.lifespan / deathEmitter.lifespan; });
@@ -145,8 +142,28 @@ Tutorial.prototype = {
 		//not a great solution, but if player is always set to the collide, changing the body type and shape won't phase it
 		player.body.setCollisionGroup(playerCollisionGroup);
 		game.world.bringToTop(overlay);
-	},
 
+		menuLabel.fixedToCamera = true;
+    	menuLabel.cameraOffset.setTo(game.width/2, game.height - 18);
+		game.world.bringToTop(menuLabel);
+
+		
+		
+		if (player.cooldownLeft < 1){
+
+			menuLabel.alpha = 0;
+		} else{
+			menuLabel.alpha = 1;
+		}
+		if (player.disguiseLeft < 1){
+			menuLabel.setText("Redisguise available in " + player.cooldownLeft);
+		} else{
+			menuLabel.setText("Disguise disappears in " + player.disguiseLeft);
+		}
+		
+		
+		
+	},
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
 		type.forEach(function(enemy){
