@@ -147,8 +147,6 @@ Tutorial.prototype = {
     	menuLabel.cameraOffset.setTo(game.width/2, game.height - 18);
 		game.world.bringToTop(menuLabel);
 
-		
-		
 		if (player.cooldownLeft < 1){
 
 			menuLabel.alpha = 0;

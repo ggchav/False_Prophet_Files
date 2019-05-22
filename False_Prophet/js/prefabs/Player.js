@@ -48,7 +48,7 @@ Player.prototype.shapeType = function(){
 }
 Player.prototype.reset = function(animate){
 	if (animate){
-		this.createParticles();
+		this.createParticles(0x181818);
 		transformSound.play();
 	}
 		shapeType = 'x';
@@ -68,14 +68,14 @@ Player.prototype.startcooldownLeft = function(){
 Player.prototype.updateTimer = function(){
 	this.cooldownLeft --;
 	this.disguiseLeft --;
+
 	if (this.cooldownLeft <= 1){
 		this.cooldownLeft = 0;
 		timer.stop();
 	}
 	if (this.disguiseLeft == 0){
 		this.reset(true);
-	}
-	console.log("cooldownLeft: "+this.cooldownLeft);	
+	}	
 }
 Player.prototype.animate = function(){
 	if (this.cooldownLeft <= 1){
@@ -100,7 +100,7 @@ Player.prototype.tweenTint = function(spriteobj, startColor, endColor, time) {  
 	// start the tween    
 	colorTween.start();
 }
-Player.prototype.createParticles = function(){
+Player.prototype.createParticles = function(color){
 	//kills shapes when they collide
 	deathEmitter = game.add.emitter(this.x, this.y, 100);
 	deathEmitter.makeParticles(this.shapeType());
@@ -113,6 +113,7 @@ Player.prototype.createParticles = function(){
 	deathEmitter.gravity = 0;		
 	//start emitting 200 particles that disappear after 2000ms
 	deathEmitter.start(true, 1300, null, 50);
+	deathEmitter.forEach(function(item){item.tint = color;});
 	//loop through each particle and change it's tint to the color of the player's tint at time of death.
 	
 }
@@ -160,7 +161,7 @@ Player.prototype.update = function() {
 				//this.tint = Phaser.Color.YELLOW;
 				shapeType = 'triangle';
 				transformSound.play();
-				this.createParticles();
+				this.createParticles(0xFFFFFF);
 				 //  Set a TimerEvent to occur after 1 seconds
 				
    				this.startcooldownLeft();
@@ -177,7 +178,7 @@ Player.prototype.update = function() {
 				//this.tint = Phaser.Color.RED;
 				shapeType = 'circle';
 				transformSound.play();
-				this.createParticles();
+				this.createParticles(0xFFFFFF);
 
 				this.startcooldownLeft();
 		}
@@ -193,7 +194,7 @@ Player.prototype.update = function() {
 				//this.tint = Phaser.Color.BLUE;
 				shapeType = 'square';
 				transformSound.play();
-				this.createParticles();
+				this.createParticles(0xFFFFFF);
 
 				this.startcooldownLeft();
 			
