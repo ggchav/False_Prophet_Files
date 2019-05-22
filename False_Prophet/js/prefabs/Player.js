@@ -19,13 +19,21 @@ Player = function (game, x, y){
 	//starts the player as an x sprite
 	this.animations.play("x");
 
-	//sets to correct size with correct bounds
+	//sets to correct size
 	this.scale.x *= .28;
 	this.scale.y *= .28;
 	this.cooldownLeft = 0;
 	this.disguiseLeft = 0;
 
+	//gets rid of current bounding box
+    this.body.clearShapes();
+
+    //loads up the x physics
+    this.body.loadPolygon("spritephysics", "x0");
+
+	//moves the anchor point to the middle
 	this.anchor.set(0.5);
+
 	this.body.angularDamping = .6;
 	this.body.damping = .6;
 

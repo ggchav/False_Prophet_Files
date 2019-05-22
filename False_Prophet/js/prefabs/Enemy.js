@@ -37,8 +37,6 @@ Enemy = function (game, x, y, type) {
 		this.body.addCircle(20);
 	}
 
-	//this.body.static = true;
-
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);
 
