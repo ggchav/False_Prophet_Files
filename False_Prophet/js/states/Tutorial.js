@@ -8,15 +8,19 @@ var triangleCollisionGroup;
 var squareCollisionGroup;
 var circleCollisionGroup;
 var playerCollisionGroup;
+
 //audio array for each sound type
 var flee = new Array();
 var anger = new Array();
 var follow = new Array();
 var poofArray = new Array();
+
+var menuLabel;
+
 var shapeCount = 10;
+
 //var channel_max = 8;	
 //audiochannels = new Array();
-var shapeGroup;
 
 var Tutorial = function(game){};
 
@@ -26,7 +30,7 @@ Tutorial.prototype = {
 		//set the bounds of the level
 		game.world.setBounds(0, 0, 4000, 3000);
 
-		//load sounds into an array
+		//load sounds into arrays
 		for (i = 1; i < 6; i++){
 			 flee[i-1] = game.add.audio("flee"+i);
 			 anger[i-1] = game.add.audio("anger"+i);
@@ -35,6 +39,7 @@ Tutorial.prototype = {
 		for (i = 0; i < 3; i++){
 			poofArray[i] = game.add.audio("poof"+i);
 		}
+
 		//starts up the p2 physics
 		game.physics.startSystem(Phaser.Physics.P2JS);
 
@@ -48,32 +53,41 @@ Tutorial.prototype = {
     	circleCollisionGroup = game.physics.p2.createCollisionGroup();
 		
 		//initialize the tilesprite for the background
-		background = game.add.tileSprite(0, 0, 1000, 1000, 'background');
+		background = game.add.tileSprite(0, 0, 700, 700, 'background');
 		
 		// add music if it's not already playing/loaded
 		if (!music){
 			music = game.add.audio('music');
 		}
+
 		// add music if it's not already playing
 		if (!music.isPlaying){
 			music.play(null, 0,.65,true);
 		}
+
 		//create the player from the prefab
 		player = new Player(game, 600, 865);
 
 		//reset player shape type
-		player.reset();
+		player.reset(false);
+
 		player.body.setCollisionGroup(playerCollisionGroup);
-		//collideworld bounds doesn't work anymore with p2
-		//player.body.collideWorldBounds = true; 
+
 		//declare a death emitter so that function can later call it with new params easily
 		deathEmitter = game.add.emitter(player.x, player.y, 100);
+
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
 
+		//adds an overlay to the game
 		overlay = game.add.image(0, 0, 'overlay');
+		overlay.scale.x = .7;
+		overlay.scale.y = .7;
 
+		//fixes the overlay to the camera
 		overlay.fixedToCamera = true;
+
+		//makes the camera follow the player
 		game.camera.follow(player);
 
 		//creates enemies from prefabs and adds them to the shape group
@@ -95,13 +109,14 @@ Tutorial.prototype = {
 			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 	
 		}
- // Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
+	// Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
 	player.body.collides([triangleCollisionGroup,squareCollisionGroup,circleCollisionGroup], this.killPlayer, this);
-	// player.body.collides(squareCollisionGroup, this.killPlayer, this);
-	// player.body.collides(triangleCollisionGroup, this.killPlayer, this);
-	// player.body.collides(circleCollisionGroup, this.killPlayer, this);
-
+	//neccessary for the collisions of p2
 	game.physics.p2.updateBoundsCollisionGroup();
+
+	menuLabel = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
+	menuLabel.anchor.setTo(.5);
+	//player.addChild(menuLabel);
 	},
 	update: function() {
 	// checks if player is destroyed before running these
@@ -120,23 +135,33 @@ Tutorial.prototype = {
 	        	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
 			}
 		}
-		/*
-		if (player.cooldown > 0){
-			this.timer = this.game.time.events.loop(Phaser.Timer.SECOND, this.updateTimer, this);
-
-		}
-		*/
-
 		//For seperating similar shapes
 		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
 		deathEmitter.forEachAlive(function(p){p.alpha = p.lifespan / deathEmitter.lifespan; });
-			
 		
 		//not a great solution, but if player is always set to the collide, changing the body type and shape won't phase it
 		player.body.setCollisionGroup(playerCollisionGroup);
 		game.world.bringToTop(overlay);
-	},
 
+		menuLabel.fixedToCamera = true;
+    	menuLabel.cameraOffset.setTo(game.width/2, game.height - 18);
+		game.world.bringToTop(menuLabel);
+
+		if (player.cooldownLeft < 1){
+
+			menuLabel.alpha = 0;
+		} else{
+			menuLabel.alpha = 1;
+		}
+		if (player.disguiseLeft < 1){
+			menuLabel.setText("Redisguise available in " + player.cooldownLeft);
+		} else{
+			menuLabel.setText("Disguise disappears in " + player.disguiseLeft);
+		}
+		
+		
+		
+	},
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
 		type.forEach(function(enemy){
