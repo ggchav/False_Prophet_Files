@@ -29,12 +29,12 @@ Enemy = function (game, x, y, type) {
 	
 	else if(type == "square"){
 		//loads up the triangle physics
-		this.body.addRectangle(40, 37);
+		this.body.addRectangle(32, 29);
 	}
 
 	else{
 		//loads up the triangle physics
-		this.body.addCircle(20);
+		this.body.addCircle(16);
 	}
 
 	//moves the anchor point to the middle
