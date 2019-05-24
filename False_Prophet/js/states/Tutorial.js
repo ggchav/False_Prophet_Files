@@ -9,6 +9,7 @@ var triangleCollisionGroup;
 var squareCollisionGroup;
 var circleCollisionGroup;
 var playerCollisionGroup;
+var barrierCollisionGroup;
 
 //audio array for each sound type
 var flee = new Array();
@@ -373,7 +374,7 @@ Tutorial.prototype = {
 			}
        	});
 	},
-	createParticles: function(shape,enemyBool){
+	createParticles: function(shape, enemyBool){
 		//kills shapes when they collide
 		deathEmitter = game.add.emitter(shape.x, shape.y, 100);
 		//if the passed shape is an enemy, enemy bool is true
@@ -399,29 +400,31 @@ Tutorial.prototype = {
 		deathEmitter.forEach(function(item){item.tint = shape.tint;});
 	},
 
+	//kills a shape on impact with the opposing shape
 	killShape: function(strong, weak){
-		//kills shapes when they collide
-		//createParticles throws an error when passed anything but the player for unknown reasons
-		//this.createParticles(weak);
 		var rng = Math.floor(Math.random()*3);
+
 		//calls the puffsound array for that sound type[picksrandom] play passes soundVol
-		var shapeDist = Phaser.Math.distance(player.body.x, player.body.y, weak.body.x, weak.body.y);
+		var shapeDist = Phaser.Math.distance(player.body.x, player.body.y, weak.sprite.body.x, weak.sprite.body.y);
 		var soundVol = (500 - shapeDist)/1000;
 		if (soundVol > .6){
 					soundVol = .6;
 		}
-		poofArray[rng].play(null, 0, soundVol,false,false);
+		poofArray[rng].play(null, 0, soundVol, false, false);
+
+		//creates particles for the death of the shape
 		this.createParticles(weak, true);
-		//weak.destroy();
+
+		//takes the sprite off the screen
 		weak.sprite.kill();
 	},
 	
-	killPlayer: function(playershape, shapes){
+	killPlayer: function(playershape, enemyshape){
 		//kills the player when collided with any shape
 		this.createParticles(player, false);
 		player.animations.stop();
 		var rng = Math.floor(Math.random()*3);
-		poofArray[rng].play(null, 0, 1,false,false);
+		poofArray[rng].play(null, 0, 1, false, false);
 		player.destroyed = true;
 		player.kill();
 		//restarts the level after we see the particle explosion of the player
