@@ -17,7 +17,7 @@ var anger = new Array();
 var follow = new Array();
 var poofArray = new Array();
 
-var menuLabel;
+var cooldown;
 
 //var channel_max = 8;	
 //audiochannels = new Array();
@@ -28,7 +28,7 @@ Tutorial.prototype = {
 
 	create: function() {
 		//set the bounds of the level
-		game.world.setBounds(0, 0, 3000, 2500);
+		game.world.setBounds(0, 0, 4000, 800);
 
 		//load sounds into arrays
 		for (i = 1; i < 6; i++){
@@ -65,13 +65,14 @@ Tutorial.prototype = {
 		if (!music.isPlaying){
 			music.play(null, 0,.65,true);
 		}
-			controls = game.add.image(1200, 500, 'shapekey');
+
 		//create the player from the prefab
-		player = new Player(game, 1950, 450);
+		player = new Player(game, 400, 400);
 
 		//reset player shape type
 		player.reset(false);
 
+		//declaring the player as a part of a collision type
 		player.body.setCollisionGroup(playerCollisionGroup);
 
 		//declare a death emitter so that function can later call it with new params easily
@@ -80,7 +81,7 @@ Tutorial.prototype = {
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
 
-		//adds an overlay to the game
+		//adds an overlay to the game and scales
 		overlay = game.add.image(0, 0, 'overlay');
 		overlay.scale.x = .7;
 		overlay.scale.y = .7;
@@ -90,57 +91,36 @@ Tutorial.prototype = {
 
 		//makes the camera follow the player
 		game.camera.follow(player);
-		//creates black space in big divider
-		var graphics = game.add.graphics(0, 0);
-		graphics.beginFill(0x000000);
-		graphics.lineStyle(10, 0x000000, 1);
-		graphics.drawRect(0, 765, 1900, 990);
 
 		//declares all barriers used for the level
-		for (i = 0; i < 8; i++){
-			//barriers for the big dividers top and bottom
-			barrier = new Barrier(game, i * 250, 775, 90, 0x5b5b5b);
+		for (i = 0; i < 3; i++){
+			//sets sides for three boxes at begining
+			barrier = new Barrier(game, 995 + (i * 400), 300, 0, 0x5b5b5b);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, i * 250, 1745, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 1265 + (i * 400), 300, 0, 0x5b5b5b);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-			if(i % 2 == 0){
-				//barriers for the big dividers side
-				barrier = new Barrier(game, 1890, 885 + ((i/2) * 250), 0, 0x5b5b5b);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			}
+			//sets tops and bottoms for boxes at begining
+			barrier = new Barrier(game, 1130 + (i * 400), 190, 90, 0x5b5b5b);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			barrier = new Barrier(game, 1130 + (i * 400), 410, 90, 0x5b5b5b);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-			if(i % 3 == 0){
-				//barriers for individual shape boxes
-				barrier = new Barrier(game, 2490, 500 + ((i/3) * 400), 0, 0xe2e2e2);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-				barrier = new Barrier(game, 2760, 500 + ((i/3) * 400), 0, 0xe2e2e2);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-				barrier = new Barrier(game, 2625, 390 + ((i/3) * 400), 90, 0xe2e2e2);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-				barrier = new Barrier(game, 2625, 610 + ((i/3) * 400), 90, 0xe2e2e2);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			//sets tops and bottoms for ending box
+			barrier = new Barrier(game, 2630 + (i * 245), 190, 90, 0x5b5b5b);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			barrier = new Barrier(game, 2630 + (i * 245), 410, 90, 0x5b5b5b);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-				//barriers for tops and bottoms of big box
-				barrier = new Barrier(game, 2325 + ((i/3) * 250), 2090, 90, 0xe2e2e2);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-				barrier = new Barrier(game, 2325 + ((i/3) * 250), 2310, 90, 0xe2e2e2);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-
-			}
-
-			if(i % 4 == 0){
-				//barriers for sides of big box
-				barrier = new Barrier(game, 2190 + ((i/4) * 770), 2200, 0, 0xe2e2e2);
+			//sets sides for ending box
+			if(i < 2){
+				barrier = new Barrier(game, 2495 + (i * 760), 300, 0, 0x5b5b5b);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 			}
@@ -150,14 +130,14 @@ Tutorial.prototype = {
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
 		for (i = 0; i < 2; i++){
 			if(i == 0){
-				triangle[i] = new Enemy(game, 2600, 600, 'triangle');
-				circle[i] = new Enemy(game, 2600, 1000, 'circle');
-				square[i] = new Enemy(game, 2600, 1400, 'square');
+				triangle[i] = new Enemy(game, 1100, 300, 'triangle');
+				circle[i] = new Enemy(game, 1500, 300, 'circle');
+				square[i] = new Enemy(game, 1900, 300, 'square');
 			}
 			else{
-				triangle[i] = new Enemy(game, 2300, 2150, 'triangle');
-				circle[i] = new Enemy(game, 2500, 2150, 'circle');
-				square[i] = new Enemy(game, 2700, 2150, 'square');
+				triangle[i] = new Enemy(game, 2600, 300, 'triangle');
+				circle[i] = new Enemy(game, 2800, 300, 'circle');
+				square[i] = new Enemy(game, 2900, 300, 'square');
 			}
 
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
@@ -183,9 +163,8 @@ Tutorial.prototype = {
 	//neccessary for the collisions of p2
 	game.physics.p2.updateBoundsCollisionGroup();
 
-	menuLabel = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
-	menuLabel.anchor.setTo(.5);
-	//player.addChild(menuLabel);
+	cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
+	cooldown.anchor.setTo(.5);
 	},
 	update: function() {
 	// checks if player is destroyed before running these
@@ -212,19 +191,19 @@ Tutorial.prototype = {
 		player.body.setCollisionGroup(playerCollisionGroup);
 		game.world.bringToTop(overlay);
 
-		menuLabel.fixedToCamera = true;
-    	menuLabel.cameraOffset.setTo(game.width/2, game.height - 18);
-		game.world.bringToTop(menuLabel);
+		cooldown.fixedToCamera = true;
+    	cooldown.cameraOffset.setTo(game.width/2, game.height - 18);
+		game.world.bringToTop(cooldown);
 
 		if (player.cooldownLeft < .1){
-			menuLabel.alpha = 0;
+			cooldown.alpha = 0;
 		} else{
-			menuLabel.alpha = 1;
+			cooldown.alpha = 1;
 		}
 		if (player.disguiseLeft < 1){
-			menuLabel.setText("Redisguise available in " + player.cooldownLeft);
+			cooldown.setText("Redisguise available in " + player.cooldownLeft);
 		} else{
-			menuLabel.setText("Disguise disappears in " + player.disguiseLeft);
+			cooldown.setText("Disguise disappears in " + player.disguiseLeft);
 		}
 		
 		

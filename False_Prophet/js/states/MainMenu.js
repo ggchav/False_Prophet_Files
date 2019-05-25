@@ -16,7 +16,6 @@ MainMenu.prototype = {
 		game.load.image('circle', 'circle0.png');
 		game.load.image('overlay', 'overlay.png');
  		game.load.image('smoke', 'smoke.png');
- 		game.load.image('shapekey', 'shapekey.png');
 
  		game.load.physics('spritephysics', 'spritephysics.json')
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
