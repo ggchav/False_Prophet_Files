@@ -67,7 +67,8 @@ Tutorial.prototype = {
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 400, 400);
+		//pass these params to create player(game, x, y, cooldownLength, disguiseLength){
+		player = new Player(game, 400, 400, 5, 3);
 
 		//reset player shape type
 		player.reset(false);
