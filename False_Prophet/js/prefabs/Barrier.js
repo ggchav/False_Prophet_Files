@@ -11,6 +11,7 @@ Barrier = function (game, x, y, angle, color) {
 	//changes the color of the barrier
 	this.tint = color;
 
+	//changes the angle of the barrier
 	this.body.angle = angle;
 
 	//gets rid of current bounding box

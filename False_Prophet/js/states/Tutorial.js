@@ -1,10 +1,13 @@
+//declare some global variables
 var player;
 var triangle = [];
 var square= [];
 var circle= [];
 var barrier;
 var music;
+var cooldown;
 
+//creates collisionc groups for p2 interactions
 var triangleCollisionGroup;
 var squareCollisionGroup;
 var circleCollisionGroup;
@@ -16,11 +19,6 @@ var flee = new Array();
 var anger = new Array();
 var follow = new Array();
 var poofArray = new Array();
-
-var cooldown;
-
-//var channel_max = 8;	
-//audiochannels = new Array();
 
 var Tutorial = function(game){};
 
@@ -52,6 +50,8 @@ Tutorial.prototype = {
     	squareCollisionGroup = game.physics.p2.createCollisionGroup();
     	circleCollisionGroup = game.physics.p2.createCollisionGroup();
     	barrierCollisionGroup = game.physics.p2.createCollisionGroup();
+
+    	endingCollisionGroup = game.physics.p2.createCollisionGroup();
 		
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 700, 700, 'background');
@@ -127,6 +127,16 @@ Tutorial.prototype = {
 
 		}
 
+		//sets up the ending block that will allow the player to continue to the levels
+		var ending = game.add.sprite(3750, 400, 'spritesheet', 'square0');;
+		game.physics.p2.enable(ending, true);
+		ending.body.static = true;
+		ending.tint = Phaser.Color.GREEN;
+		ending.body.clearShapes();
+		ending.body.addRectangle(190,190);
+		ending.body.setCollisionGroup(endingCollisionGroup);
+		ending.body.collides(playerCollisionGroup);
+
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
 		for (i = 0; i < 2; i++){
 			if(i == 0){
@@ -154,27 +164,32 @@ Tutorial.prototype = {
 	
 		}
 	
-	// Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
-	player.body.collides([triangleCollisionGroup,squareCollisionGroup,circleCollisionGroup], this.killPlayer, this);
+		// Working player collision but annoying for testing purposes so I recommend turning off to prevent dying
+		player.body.collides([triangleCollisionGroup, squareCollisionGroup, circleCollisionGroup], this.killPlayer, this);
 
-	//used for player collisions with barriers
-	player.body.collides(barrierCollisionGroup);
+		player.body.collides(endingCollisionGroup, this.nextLevel, this);
 
-	//neccessary for the collisions of p2
-	game.physics.p2.updateBoundsCollisionGroup();
+		//used for player collisions with barriers
+		player.body.collides(barrierCollisionGroup);
 
-	cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
-	cooldown.anchor.setTo(.5);
+		//neccessary for the collisions of p2
+		game.physics.p2.updateBoundsCollisionGroup();
+
+		//adds the cooldown text to the game
+		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
+		cooldown.anchor.setTo(.5);
+
 	},
+
 	update: function() {
 	// checks if player is destroyed before running these
-
 		if (!player.destroyed){
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
 			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
 			this.shapeMovement(circle, 'circle', 'square', 'triangle');
 			this.shapeMovement(square, 'square', 'triangle', 'circle');
+
 			//instructions for the camera to stay on the screen
 			if (!game.camera.atLimit.x){
 	        	background.tilePosition.x -= (player.body.velocity.x * game.time.physicsElapsed);
@@ -183,6 +198,7 @@ Tutorial.prototype = {
 	        	background.tilePosition.y -= (player.body.velocity.y * game.time.physicsElapsed);
 			}
 		}
+
 		//For seperating similar shapes
 		//particle effect fades in opacity towards 0 as it's lifespan approaches 0.
 		deathEmitter.forEachAlive(function(p){p.alpha = p.lifespan / deathEmitter.lifespan; });
@@ -191,18 +207,22 @@ Tutorial.prototype = {
 		player.body.setCollisionGroup(playerCollisionGroup);
 		game.world.bringToTop(overlay);
 
+		//brings the cooldown text to the top of the screen and moves it
 		cooldown.fixedToCamera = true;
     	cooldown.cameraOffset.setTo(game.width/2, game.height - 18);
 		game.world.bringToTop(cooldown);
 
+		//changes the text of the cooldown dependant on the player's state
 		if (player.cooldownLeft < .1){
 			cooldown.alpha = 0;
-		} else{
+		}
+		else{
 			cooldown.alpha = 1;
 		}
 		if (player.disguiseLeft < 1){
 			cooldown.setText("Redisguise available in " + player.cooldownLeft);
-		} else{
+		}
+		else{
 			cooldown.setText("Disguise disappears in " + player.disguiseLeft);
 		}
 		
@@ -221,7 +241,7 @@ Tutorial.prototype = {
 			//how close a shape has to be to "see" the player shape and react
 			var sightRange = 520;
 			//the approximate proximity following shapes will go before they stop moving toward player
-			var followDist = 120;
+			var followDist = 250;
 			//how quickly enemy color changes to reflect how the feel about your shape type
 			var enemyTweenSpeed = 600;
 			//shorthand to make it easier to refer to the distance between shape vs player
@@ -277,7 +297,6 @@ Tutorial.prototype = {
        				shapeSound(follow);
        				//tween enemy color to be the follow color
        				enemy.tint= Phaser.Color.GREEN;
-       				//tweenTint(enemy, enemy.tint, Phaser.Color.GREEN, enemyTweenSpeed);
        				if (playerShapeDist >= 120){
 						var dx = player.body.x - enemy.x;
        					var dy = player.body.y - enemy.y;
@@ -297,7 +316,6 @@ Tutorial.prototype = {
 				if(shapeCanSeePlayer){
        				shapeSound(flee);
 					enemy.tint= Phaser.Color.YELLOW;
-       				//tweenTint(enemy, enemy.tint, Phaser.Color.YELLOW, enemyTweenSpeed);
 					//changes fleespeed if closer to the player
 					if(playerShapeDist <= 150){
 						fleeSpeed = fleeSpeed * 1.8;
@@ -333,7 +351,6 @@ Tutorial.prototype = {
 				if(shapeCanSeePlayer){
 					shapeSound(anger);
 					enemy.tint = Phaser.Color.RED;
-					//tweenTint(enemy, enemy.tint, Phaser.Color.RED, enemyTweenSpeed);
 					var dx = player.body.x - enemy.x;
        				var dy = player.body.y - enemy.y;
        				var angle = Math.atan2(dy, dx) + game.math.degToRad(-90) + (Math.PI / 2);
@@ -408,5 +425,10 @@ Tutorial.prototype = {
 		player.kill();
 		//restarts the level after we see the particle explosion of the player
 		game.time.events.add(Phaser.Timer.SECOND * 2, function() { game.state.start('Tutorial')});
+	},
+
+	nextLevel: function(){
+		//for when the player runs into the ending block
+		game.state.start('First_Level');
 	}
 }

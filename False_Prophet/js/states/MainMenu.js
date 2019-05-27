@@ -8,7 +8,6 @@ MainMenu.prototype = {
 		game.load.path = 'assets/img/';
 
 		game.load.image('x', 'x0.png');
-		//game.load.image('background', 'tempbackground.png');
 		game.load.image('background', 'woodbackground.jpg');
 		game.load.image('barrier', 'barrier.png');
 		game.load.image('triangle', 'triangle0.png');
