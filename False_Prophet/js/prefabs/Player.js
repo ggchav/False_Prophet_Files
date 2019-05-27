@@ -1,9 +1,9 @@
 var shapeType = 'x';
 var transformSound;
-var cooldownDuration = 5; //includes the 8 seconds of disguise
+
 var animateSpeed = 500; // 500 milliseconds
-var disguiseDuration = 3; // 8 seconds
-Player = function (game, x, y){
+
+Player = function (game, x, y, cooldownLength, disguiseLength){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 	transformSound = game.add.audio('transform');
@@ -24,6 +24,8 @@ Player = function (game, x, y){
 	this.scale.y *= .28;
 	this.cooldownLeft = 0;
 	this.disguiseLeft = 0;
+	this.cooldownDuration = cooldownLength; //includes the 8 seconds of disguise
+	this.disguiseDuration = disguiseLength; // 8 seconds
 
 	//gets rid of current bounding box
     this.body.clearShapes();
@@ -66,8 +68,8 @@ Player.prototype.reset = function(animate){
 	//
 }
 Player.prototype.startcooldownLeft = function(){
-	this.cooldownLeft = cooldownDuration;
-	this.disguiseLeft = disguiseDuration;
+	this.cooldownLeft = this.cooldownDuration;
+	this.disguiseLeft = this.disguiseDuration;
 	this.tint = 0x181818;
 	timer.loop(1000, this.updateTimer, this);
 	timer.start();
