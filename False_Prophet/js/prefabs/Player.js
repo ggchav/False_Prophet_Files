@@ -24,8 +24,8 @@ Player = function (game, x, y, cooldownLength, disguiseLength){
 	this.scale.y *= .28;
 	this.cooldownLeft = 0;
 	this.disguiseLeft = 0;
-	this.cooldownDuration = cooldownLength; //includes the 8 seconds of disguise
-	this.disguiseDuration = disguiseLength; // 8 seconds
+	this.cooldownDuration = cooldownLength;
+	this.disguiseDuration = disguiseLength;
 
 	//gets rid of current bounding box
     this.body.clearShapes();

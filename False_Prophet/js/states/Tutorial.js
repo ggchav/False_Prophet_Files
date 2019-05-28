@@ -68,7 +68,7 @@ Tutorial.prototype = {
 
 		//create the player from the prefab
 		//pass these params to create player(game, x, y, cooldownLength, disguiseLength){
-		player = new Player(game, 400, 400, 5, 3);
+		player = new Player(game, 400, 400, 3, 3);
 
 		//reset player shape type
 		player.reset(false);
@@ -96,32 +96,32 @@ Tutorial.prototype = {
 		//declares all barriers used for the level
 		for (i = 0; i < 3; i++){
 			//sets sides for three boxes at begining
-			barrier = new Barrier(game, 995 + (i * 400), 300, 0, 0x5b5b5b);
+			barrier = new Barrier(game, 995 + (i * 400), 300, 0);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 1265 + (i * 400), 300, 0, 0x5b5b5b);
+			barrier = new Barrier(game, 1265 + (i * 400), 300, 0);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
 			//sets tops and bottoms for boxes at begining
-			barrier = new Barrier(game, 1130 + (i * 400), 190, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 1130 + (i * 400), 190, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 1130 + (i * 400), 410, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 1130 + (i * 400), 410, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
 			//sets tops and bottoms for ending box
-			barrier = new Barrier(game, 2630 + (i * 245), 190, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 2630 + (i * 245), 190, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 2630 + (i * 245), 410, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 2630 + (i * 245), 410, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
 			//sets sides for ending box
 			if(i < 2){
-				barrier = new Barrier(game, 2495 + (i * 760), 300, 0, 0x5b5b5b);
+				barrier = new Barrier(game, 2495 + (i * 760), 300, 0);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 			}
@@ -130,7 +130,7 @@ Tutorial.prototype = {
 
 		//sets up the ending block that will allow the player to continue to the levels
 		var ending = game.add.sprite(3750, 400, 'spritesheet', 'square0');;
-		game.physics.p2.enable(ending, true);
+		game.physics.p2.enable(ending, false);
 		ending.body.static = true;
 		ending.tint = Phaser.Color.GREEN;
 		ending.body.clearShapes();

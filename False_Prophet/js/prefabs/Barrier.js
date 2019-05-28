@@ -1,4 +1,4 @@
-Barrier = function (game, x, y, angle, color) {
+Barrier = function (game, x, y, angle) {
 
 	Phaser.Sprite.call(this, game, x, y, 'barrier');
 
@@ -7,9 +7,6 @@ Barrier = function (game, x, y, angle, color) {
 
 	//makes the barrier unable to move
 	this.body.static = true;
-
-	//changes the color of the barrier
-	this.tint = color;
 
 	//changes the angle of the barrier
 	this.body.angle = angle;

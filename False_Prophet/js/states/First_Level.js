@@ -65,7 +65,7 @@ First_Level.prototype = {
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 500, 1000);
+		player = new Player(game, 500, 1000, 5, 8);
 
 		//reset player shape type
 		player.reset(false);
@@ -92,25 +92,25 @@ First_Level.prototype = {
 
 		//declares all barriers used for the level
 		for (i = 0; i < 2; i++){
-			barrier = new Barrier(game, 800 + (i * 1000), 500, 0, 0x5b5b5b);
+			barrier = new Barrier(game, 800 + (i * 1000), 500, 0);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 935 + (i * 730), 390, 90, 0x5b5b5b);
-			barrier.body.setCollisionGroup(barrierCollisionGroup);
-			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-
-			barrier = new Barrier(game, 800 + (i * 1000), 1500, 0, 0x5b5b5b);
-			barrier.body.setCollisionGroup(barrierCollisionGroup);
-			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 935 + (i * 730), 1610, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 935 + (i * 730), 390, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-			barrier = new Barrier(game, 1300, 390 + (i * 605), 90, 0x5b5b5b);
+			barrier = new Barrier(game, 800 + (i * 1000), 1500, 0);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+			barrier = new Barrier(game, 935 + (i * 730), 1610, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-			barrier = new Barrier(game, 500, 800 + (i * 400), 0, 0x5b5b5b);
+			barrier = new Barrier(game, 1300, 390 + (i * 605), 90);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+
+			barrier = new Barrier(game, 500, 800 + (i * 400), 0);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 

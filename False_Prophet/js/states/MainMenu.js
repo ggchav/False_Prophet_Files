@@ -7,14 +7,18 @@ MainMenu.prototype = {
 		//load image assets
 		game.load.path = 'assets/img/';
 
-		game.load.image('x', 'x0.png');
+		game.load.image('x', 'x0.png'); //take out
 		game.load.image('background', 'woodbackground.jpg');
-		game.load.image('barrier', 'barrier.png');
-		game.load.image('triangle', 'triangle0.png');
-		game.load.image('square', 'square0.png');
-		game.load.image('circle', 'circle0.png');
+		game.load.image('barrier', 'barrier.png'); //put into atlas
+		game.load.image('triangle', 'triangle0.png'); //take out
+		game.load.image('square', 'square0.png');	//take out
+		game.load.image('circle', 'circle0.png');	//take out
 		game.load.image('overlay', 'overlay.png');
- 		game.load.image('smoke', 'smoke.png');
+ 		game.load.image('smoke', 'smoke.png'); //put into atlas
+ 		game.load.image('menu', 'menu.png');
+ 		game.load.image('startspace', 'startspace.png'); //put into atlas
+ 		game.load.image('disguisechart', 'disguisechart.png'); //put into atlas
+
 
  		game.load.physics('spritephysics', 'spritephysics.json')
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
@@ -24,35 +28,40 @@ MainMenu.prototype = {
 		game.load.audio('music','music.mp3');
 		game.load.audio('transform','changepoof.mp3');
 		for (i = 0; i < 3; i++) {
-			game.load.audio('poof'+i,['deathpoof'+i+'.mp3']);
+			game.load.audio('poof' + i, ['deathpoof' + i + '.mp3']);
 		}
 		for (i = 1; i < 7; i++){
 			var soundtype = "flee";
-			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+			game.load.audio(soundtype + i, [soundtype + i + '.wav']);
 			soundtype = "anger";
-			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+			game.load.audio(soundtype + i, [soundtype + i + '.wav']);
 			soundtype = "follow";
-			game.load.audio(soundtype+i,[soundtype+i+'.wav']);
+			game.load.audio(soundtype + i, [soundtype + i + '.wav']);
 
 		}
 	},
 
 	create: function() {
 
-		//creates text for the the mainmenu with controls and a prompt to start the game
-		var menuLabel = game.add.text(game.width/2, 100, 'Main Menu', {font: '50px Arial', fill: '#ffffff'});
-		var controlsLabel = game.add.text(game.width/2, 300, 'Use the W, A, S, D keys to move', {font: '25px Arial', fill: '#ffffff'});
-		var controlsLabel2 = game.add.text(game.width/2, 400, 'Use the J, K, L keys to shape shift', {font: '25px Arial', fill: '#ffffff'});
-		var startLabel = game.add.text(game.width/2, 500, 'Press the W key to begin', {font: '25px Arial', fill: '#ffffff'});
-		menuLabel.anchor.set(0.5);
-		controlsLabel.anchor.set(0.5);
-		controlsLabel2.anchor.set(0.5);
-		startLabel.anchor.set(0.5);
-		//adds the W key as an input
-		var wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+		//adds the menu image for the main menu
+		var menu = game.add.image(0, 0, 'menu');
+		menu.scale.x *= .5;
+		menu.scale.y *= .5;
+
+		//adds instructions to continue that fades in and out on the screen
+		var startspace = game.add.image(game.world.centerX, 575, 'startspace');
+		startspace.scale.x *= .5;
+		startspace.scale.y *= .5;
+		startspace.anchor.set(0.5);
+    	startspace.alpha = 0;
+		game.add.tween(startspace).to( { alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
+
+		//adds the space key as an input
+		var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 		//if the W key is pressed, go to the start function
-		wKey.onDown.addOnce(this.start, this);
+		spaceKey.onDown.addOnce(this.start, this);
 
 	},
 	
