@@ -30,9 +30,9 @@ Tutorial.prototype = {
 
 		//load sounds into arrays
 		for (i = 1; i < 6; i++){
-			 flee[i-1] = game.add.audio("flee"+i);
-			 anger[i-1] = game.add.audio("anger"+i);
-			 follow[i-1] = game.add.audio("follow"+i);
+			 flee[i-1] = game.add.audio("flee" + i);
+			 anger[i-1] = game.add.audio("anger" + i);
+			 follow[i-1] = game.add.audio("follow" + i);
 		}
 		for (i = 0; i < 3; i++){
 			poofArray[i] = game.add.audio("poof"+i);
@@ -63,7 +63,7 @@ Tutorial.prototype = {
 
 		// add music if it's not already playing
 		if (!music.isPlaying){
-			music.play(null, 0,.65,true);
+			music.play(null, 0, .65, true);
 		}
 
 		//create the player from the prefab
@@ -128,21 +128,21 @@ Tutorial.prototype = {
 
 		}
 
-		var chart = game.add.image(400, 400, 'movechart');
+		var chart = game.add.image(400, 400, 'spritesheet', 'movechart');
 		chart.anchor.set(.5);
-		chart = game.add.image(1300, 575, 'disguisechart');
+		chart = game.add.image(1300, 575, 'spritesheet', 'disguisechart');
 		chart.anchor.set(.5);
-		chart = game.add.image(1750, 575, 'moodchart');
+		chart = game.add.image(1750, 575, 'spritesheet', 'moodchart');
 		chart.anchor.set(.5);
-		chart = game.add.image(2700, 575, 'trianglechart');
+		chart = game.add.image(2700, 575, 'spritesheet', 'trianglechart');
 		chart.anchor.set(.5);
-		chart = game.add.image(3050, 575, 'goalchart');
+		chart = game.add.image(3050, 575, 'spritesheet', 'goalchart');
 		chart.scale.x = .5;
 		chart.scale.y = .5;
 		chart.anchor.set(.5);
 
 		//sets up the ending block that will allow the player to continue to the levels
-		var ending = game.add.sprite(3750, 400, 'level1');;
+		var ending = game.add.sprite(3750, 400, 'spritesheet', 'level1');;
 		game.physics.p2.enable(ending, true);
 		ending.body.static = true;
 		ending.body.clearShapes();
@@ -393,7 +393,7 @@ Tutorial.prototype = {
 		if (!enemyBool){
 			deathEmitter.makeParticles(shape.shapeType());
 		} else{
-			deathEmitter.makeParticles('smoke');
+			deathEmitter.makeParticles('spritesheet', ['smoke']);
 			size = 3;
 			spread = .7;
 		}

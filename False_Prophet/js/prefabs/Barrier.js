@@ -1,6 +1,6 @@
 Barrier = function (game, x, y, angle) {
 
-	Phaser.Sprite.call(this, game, x, y, 'barrier');
+	Phaser.Sprite.call(this, game, x, y, 'spritesheet', 'barrier');
 
 	//enables physics
 	this.game.physics.p2.enable(this, false);

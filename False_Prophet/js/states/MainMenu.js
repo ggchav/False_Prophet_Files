@@ -6,24 +6,14 @@ MainMenu.prototype = {
 
 		//load image assets
 		game.load.path = 'assets/img/';
-
-		game.load.image('x', 'x0.png'); //take out
+		
 		game.load.image('background', 'woodbackground.jpg');
-		game.load.image('barrier', 'barrier.png'); //put into atlas
-		game.load.image('triangle', 'triangle0.png'); //take out
-		game.load.image('square', 'square0.png');	//take out
-		game.load.image('circle', 'circle0.png');	//take out
 		game.load.image('overlay', 'overlay.png');
- 		game.load.image('smoke', 'smoke.png'); //put into atlas
  		game.load.image('menu', 'menu.png');
- 		game.load.image('startspace', 'startspace.png'); //put into atlas
- 		game.load.image('disguisechart', 'disguisechart.png'); //put into atlas
- 		game.load.image('movechart', 'movechart.png'); //put into atlas
- 		game.load.image('disguisechart', 'disguisechart.png'); //put into atlas
- 		game.load.image('moodchart', 'moodchart.png'); //put into atlas
- 		game.load.image('trianglechart', 'trianglechart.png'); //put into atlas
- 		game.load.image('goalchart', 'goalchart.png'); //put into atlas
- 		game.load.image('level1', 'level1.png'); //put into atlas
+ 		game.load.image('x', 'x0.png');
+ 		game.load.image('triangle', 'triangle0.png');
+ 		game.load.image('square', 'square0.png');
+ 		game.load.image('circle', 'circle0.png');
 
  		game.load.physics('spritephysics', 'spritephysics.json')
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
@@ -54,7 +44,7 @@ MainMenu.prototype = {
 		menu.scale.y *= .5;
 
 		//adds instructions to continue that fades in and out on the screen
-		var startspace = game.add.image(game.world.centerX, 575, 'startspace');
+		var startspace = game.add.image(game.world.centerX, 575, 'spritesheet', 'startspace');
 		startspace.scale.x *= .5;
 		startspace.scale.y *= .5;
 		startspace.anchor.set(0.5);

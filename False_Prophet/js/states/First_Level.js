@@ -352,7 +352,7 @@ First_Level.prototype = {
 		if (!enemyBool){
 			deathEmitter.makeParticles(shape.shapeType());
 		} else{
-			deathEmitter.makeParticles('smoke');
+			deathEmitter.makeParticles('spritesheet', ['smoke']);
 			size = 3;
 			spread = .7;
 		}
