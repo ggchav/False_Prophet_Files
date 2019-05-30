@@ -65,7 +65,7 @@ First_Level.prototype = {
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 500, 1000, 5, 8);
+		player = new Player(game, 500, 1000, 9, 5);
 
 		//reset player shape type
 		player.reset(false);

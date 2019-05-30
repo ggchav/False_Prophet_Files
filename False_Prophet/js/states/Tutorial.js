@@ -68,7 +68,7 @@ Tutorial.prototype = {
 
 		//create the player from the prefab
 		//pass these params to create player(game, x, y, cooldownLength, disguiseLength){
-		player = new Player(game, 400, 400, 3, 3);
+		player = new Player(game, 400, 400, 5, 3);
 
 		//reset player shape type
 		player.reset(false);
@@ -128,13 +128,25 @@ Tutorial.prototype = {
 
 		}
 
+		var chart = game.add.image(400, 400, 'movechart');
+		chart.anchor.set(.5);
+		chart = game.add.image(1300, 575, 'disguisechart');
+		chart.anchor.set(.5);
+		chart = game.add.image(1750, 575, 'moodchart');
+		chart.anchor.set(.5);
+		chart = game.add.image(2700, 575, 'trianglechart');
+		chart.anchor.set(.5);
+		chart = game.add.image(3050, 575, 'goalchart');
+		chart.scale.x = .5;
+		chart.scale.y = .5;
+		chart.anchor.set(.5);
+
 		//sets up the ending block that will allow the player to continue to the levels
-		var ending = game.add.sprite(3750, 400, 'spritesheet', 'square0');;
-		game.physics.p2.enable(ending, false);
+		var ending = game.add.sprite(3750, 400, 'level1');;
+		game.physics.p2.enable(ending, true);
 		ending.body.static = true;
-		ending.tint = Phaser.Color.GREEN;
 		ending.body.clearShapes();
-		ending.body.addRectangle(190,190);
+		ending.body.addRectangle(220,250);
 		ending.body.setCollisionGroup(endingCollisionGroup);
 		ending.body.collides(playerCollisionGroup);
 
@@ -212,6 +224,7 @@ Tutorial.prototype = {
 		cooldown.fixedToCamera = true;
     	cooldown.cameraOffset.setTo(game.width/2, game.height - 18);
 		game.world.bringToTop(cooldown);
+		game.world.bringToTop(player);
 
 		//changes the text of the cooldown dependant on the player's state
 		if (player.cooldownLeft < .1){

@@ -18,7 +18,12 @@ MainMenu.prototype = {
  		game.load.image('menu', 'menu.png');
  		game.load.image('startspace', 'startspace.png'); //put into atlas
  		game.load.image('disguisechart', 'disguisechart.png'); //put into atlas
-
+ 		game.load.image('movechart', 'movechart.png'); //put into atlas
+ 		game.load.image('disguisechart', 'disguisechart.png'); //put into atlas
+ 		game.load.image('moodchart', 'moodchart.png'); //put into atlas
+ 		game.load.image('trianglechart', 'trianglechart.png'); //put into atlas
+ 		game.load.image('goalchart', 'goalchart.png'); //put into atlas
+ 		game.load.image('level1', 'level1.png'); //put into atlas
 
  		game.load.physics('spritephysics', 'spritephysics.json')
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
