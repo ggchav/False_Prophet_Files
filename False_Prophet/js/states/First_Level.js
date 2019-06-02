@@ -205,7 +205,7 @@ First_Level.prototype = {
 			//how quickly a shape runs away
 			var fleeSpeed = 220;
 			//how quickly a shape runs toward the player aggresively
-			var angerSpeed = 290;
+			var angerSpeed = 240;
 			//how quickly a shape follows the player
 			var followSpeed = 150;
 			//how close a shape has to be to "see" the player shape and react

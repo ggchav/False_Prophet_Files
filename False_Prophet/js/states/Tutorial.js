@@ -4,7 +4,7 @@ var triangle = [];
 var square= [];
 var circle= [];
 var barrier;
-var music;
+var tutmusic;
 var cooldown;
 
 //creates collisionc groups for p2 interactions
@@ -56,14 +56,14 @@ Tutorial.prototype = {
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 700, 700, 'background');
 		
-		// add music if it's not already playing/loaded
-		if (!music){
-			music = game.add.audio('music');
+		// add tutmusic if it's not already playing/loaded
+		if (!tutmusic){
+			tutmusic = game.add.audio('tutmusic');
 		}
 
-		// add music if it's not already playing
-		if (!music.isPlaying){
-			music.play(null, 0, .65, true);
+		// add tutmusic if it's not already playing
+		if (!tutmusic.isPlaying){
+			tutmusic.play(null, 0, .65, true);
 		}
 
 		//create the player from the prefab
@@ -143,7 +143,7 @@ Tutorial.prototype = {
 
 		//sets up the ending block that will allow the player to continue to the levels
 		var ending = game.add.sprite(3750, 400, 'spritesheet', 'level1');;
-		game.physics.p2.enable(ending, true);
+		game.physics.p2.enable(ending, false);
 		ending.body.static = true;
 		ending.body.clearShapes();
 		ending.body.addRectangle(220,250);
@@ -443,6 +443,7 @@ Tutorial.prototype = {
 
 	nextLevel: function(){
 		//for when the player runs into the ending block
+		tutmusic.stop();
 		game.state.start('First_Level');
 	}
 }

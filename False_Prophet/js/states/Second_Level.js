@@ -26,7 +26,7 @@ Second_Level.prototype = {
 
 	create: function() {
 		//set the bounds of the level
-		game.world.setBounds(0, 0, 4000, 800);
+		game.world.setBounds(0, 0, 2000, 2000);
 
 		//load sounds into arrays
 		for (i = 1; i < 6; i++){
@@ -65,7 +65,7 @@ Second_Level.prototype = {
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 400, 400);
+		player = new Player(game, 500, 1000, 9, 5);
 
 		//reset player shape type
 		player.reset(false);
@@ -91,52 +91,36 @@ Second_Level.prototype = {
 		game.camera.follow(player);
 
 		//declares all barriers used for the level
-		for (i = 0; i < 3; i++){
-			//sets sides for three boxes at begining
-			barrier = new Barrier(game, 995 + (i * 400), 300, 0, 0x5b5b5b);
+		for (i = 0; i < 2; i++){
+			barrier = new Barrier(game, 800 + (i * 1000), 500, 0);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 1265 + (i * 400), 300, 0, 0x5b5b5b);
-			barrier.body.setCollisionGroup(barrierCollisionGroup);
-			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-
-			//sets tops and bottoms for boxes at begining
-			barrier = new Barrier(game, 1130 + (i * 400), 190, 90, 0x5b5b5b);
-			barrier.body.setCollisionGroup(barrierCollisionGroup);
-			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 1130 + (i * 400), 410, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 935 + (i * 730), 390, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-			//sets tops and bottoms for ending box
-			barrier = new Barrier(game, 2630 + (i * 245), 190, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 800 + (i * 1000), 1500, 0);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			barrier = new Barrier(game, 2630 + (i * 245), 410, 90, 0x5b5b5b);
+			barrier = new Barrier(game, 935 + (i * 730), 1610, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-			//sets sides for ending box
-			if(i < 2){
-				barrier = new Barrier(game, 2495 + (i * 760), 300, 0, 0x5b5b5b);
-				barrier.body.setCollisionGroup(barrierCollisionGroup);
-				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
-			}
+			barrier = new Barrier(game, 1300, 390 + (i * 605), 90);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
+
+			barrier = new Barrier(game, 500, 800 + (i * 400), 0);
+			barrier.body.setCollisionGroup(barrierCollisionGroup);
+			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
 		}
 
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
-		for (i = 0; i < 2; i++){
-			if(i == 0){
-				triangle[i] = new Enemy(game, 1100, 300, 'triangle');
-				circle[i] = new Enemy(game, 1500, 300, 'circle');
-				square[i] = new Enemy(game, 1900, 300, 'square');
-			}
-			else{
-				triangle[i] = new Enemy(game, 2600, 300, 'triangle');
-				circle[i] = new Enemy(game, 2800, 300, 'circle');
-				square[i] = new Enemy(game, 2900, 300, 'square');
-			}
+		for (i = 0; i < 4; i++){
+			triangle[i] = new Enemy(game, 1650, 450 + (i * 50), 'triangle');
+			circle[i] = new Enemy(game, 1650, 1400 + (i * 50), 'circle');
+			square[i] = new Enemy(game, 1100, 920 + (i * 50), 'square');
 
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
@@ -225,9 +209,9 @@ Second_Level.prototype = {
 			//how quickly a shape follows the player
 			var followSpeed = 150;
 			//how close a shape has to be to "see" the player shape and react
-			var sightRange = 520;
+			var sightRange = 400;
 			//the approximate proximity following shapes will go before they stop moving toward player
-			var followDist = 250;
+			var followDist = 200;
 			//how quickly enemy color changes to reflect how the feel about your shape type
 			var enemyTweenSpeed = 600;
 			//shorthand to make it easier to refer to the distance between shape vs player
@@ -368,7 +352,7 @@ Second_Level.prototype = {
 		if (!enemyBool){
 			deathEmitter.makeParticles(shape.shapeType());
 		} else{
-			deathEmitter.makeParticles('smoke');
+			deathEmitter.makeParticles('spritesheet', ['smoke']);
 			size = 3;
 			spread = .7;
 		}

@@ -21,6 +21,7 @@ MainMenu.prototype = {
 		// load audio assets
 		game.load.path = 'assets/sound/';
 		game.load.audio('music','music.mp3');
+		game.load.audio('tutmusic','tutmusic.mp3');
 		game.load.audio('transform','changepoof.mp3');
 		for (i = 0; i < 3; i++) {
 			game.load.audio('poof' + i, ['deathpoof' + i + '.mp3']);
