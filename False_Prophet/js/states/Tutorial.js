@@ -146,7 +146,7 @@ Tutorial.prototype = {
 		game.physics.p2.enable(ending, false);
 		ending.body.static = true;
 		ending.body.clearShapes();
-		ending.body.addRectangle(220,250);
+		ending.body.addRectangle(100,150);
 		ending.body.setCollisionGroup(endingCollisionGroup);
 		ending.body.collides(playerCollisionGroup);
 
@@ -392,7 +392,8 @@ Tutorial.prototype = {
 		var spread = 1;
 		if (!enemyBool){
 			deathEmitter.makeParticles(shape.shapeType());
-		} else{
+		}
+		else{
 			deathEmitter.makeParticles('spritesheet', ['smoke']);
 			size = 3;
 			spread = .7;

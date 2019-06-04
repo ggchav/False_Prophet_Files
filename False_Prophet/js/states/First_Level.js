@@ -118,9 +118,9 @@ First_Level.prototype = {
 
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
 		for (i = 0; i < 4; i++){
-			triangle[i] = new Enemy(game, 1650, 450 + (i * 50), 'triangle');
-			circle[i] = new Enemy(game, 1650, 1400 + (i * 50), 'circle');
-			square[i] = new Enemy(game, 1100, 920 + (i * 50), 'square');
+			triangle[i] = new Enemy(game, 1650, 450 + (i * 100), 'triangle');
+			circle[i] = new Enemy(game, 1650, 1225 + (i * 100), 'circle');
+			square[i] = new Enemy(game, 1100, 920 + (i * 100), 'square');
 
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
@@ -209,7 +209,7 @@ First_Level.prototype = {
 			//how quickly a shape follows the player
 			var followSpeed = 150;
 			//how close a shape has to be to "see" the player shape and react
-			var sightRange = 400;
+			var sightRange = 10;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 200;
 			//how quickly enemy color changes to reflect how the feel about your shape type
@@ -351,7 +351,8 @@ First_Level.prototype = {
 		var spread = 1;
 		if (!enemyBool){
 			deathEmitter.makeParticles(shape.shapeType());
-		} else{
+		}
+		else{
 			deathEmitter.makeParticles('spritesheet', ['smoke']);
 			size = 3;
 			spread = .7;
