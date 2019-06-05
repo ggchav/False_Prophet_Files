@@ -63,7 +63,7 @@ Tutorial.prototype = {
 
 		// add tutmusic if it's not already playing
 		if (!tutmusic.isPlaying){
-			tutmusic.play(null, 0, .65, true);
+			tutmusic.play(null, 0, .37, true);
 		}
 
 		//create the player from the prefab
@@ -196,6 +196,11 @@ Tutorial.prototype = {
 
 	update: function() {
 	// checks if player is destroyed before running these
+	//cheat code to make testing easier
+	var pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+	if (pKey.justDown){
+		this.nextLevel();
+	}
 		if (!player.destroyed){
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
@@ -245,6 +250,7 @@ Tutorial.prototype = {
 	},
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
+		//console.log("shapemovement running");
 		type.forEach( enemyloop = function(enemy){
 			//how quickly a shape runs away
 			var fleeSpeed = 220;
@@ -261,6 +267,9 @@ Tutorial.prototype = {
 			//shorthand to make it easier to refer to the distance between shape vs player
 			var playerShapeDist = Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y);
 			//withinSightRange bool returns true if a shape can see a player
+			if (!shapeCanSeePlayer){
+				enemy.tint = Phaser.Color.WHITE;
+			}
 			var shapeCanSeePlayer = playerShapeDist <= sightRange;
 			//variable to set volume to play sound effect at, increases value with proximity
 			var soundVol = (sightRange - playerShapeDist) /1000;
@@ -305,8 +314,9 @@ Tutorial.prototype = {
 				colorTween.start();
 				
 			}
-			//shape follows the player if the are the same shape, never getting too close
+			//shape follows the player if they are the same shape, never getting too close
        		if (player.shapeType() == same){
+       			//console.log('same');
        			if (shapeCanSeePlayer){
        				shapeSound(follow);
        				//tween enemy color to be the follow color

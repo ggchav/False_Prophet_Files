@@ -6,6 +6,11 @@ var circle= [];
 var barrier;
 var music;
 var cooldown;
+var levelcomplete;
+var enemycount = 4;
+var alive;
+var chart;
+//create a shape array that represents the remaining shapes alive, and a counter for each shape
 
 //creates collisionc groups for p2 interactions
 var triangleCollisionGroup;
@@ -43,7 +48,7 @@ First_Level.prototype = {
 
 		//turn on impact events for the world, without this we get no collision callbacks
     	game.physics.p2.setImpactEvents(true);
-
+    	alive = {wincondition:0,triangle:enemycount,circle:enemycount,square:enemycount}
     	//creates p2 collsion groups
     	playerCollisionGroup = game.physics.p2.createCollisionGroup();
     	triangleCollisionGroup = game.physics.p2.createCollisionGroup();
@@ -61,7 +66,7 @@ First_Level.prototype = {
 
 		// add music if it's not already playing
 		if (!music.isPlaying){
-			music.play(null, 0,.65,true);
+			music.play(null, 0,.37,true);
 		}
 
 		//create the player from the prefab
@@ -83,6 +88,11 @@ First_Level.prototype = {
 		overlay = game.add.image(0, 0, 'overlay');
 		overlay.scale.x = .7;
 		overlay.scale.y = .7;
+		chart = game.add.image(1300, 575, 'spritesheet', 'disguisechart');
+		chart.anchor.set(.5);
+		chart.scale.x = .25;
+		chart.scale.y = .25;
+		chart.fixedToCamera = true;
 
 		//fixes the overlay to the camera
 		overlay.fixedToCamera = true;
@@ -117,7 +127,7 @@ First_Level.prototype = {
 		}
 
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
-		for (i = 0; i < 4; i++){
+		for (i = 0; i < enemycount; i++){
 			triangle[i] = new Enemy(game, 1650, 450 + (i * 100), 'triangle');
 			circle[i] = new Enemy(game, 1650, 1225 + (i * 100), 'circle');
 			square[i] = new Enemy(game, 1100, 920 + (i * 100), 'square');
@@ -125,7 +135,7 @@ First_Level.prototype = {
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
 			square[i].body.setCollisionGroup(squareCollisionGroup);
-
+			// be aware that this is passing the body1 and body2, not the actual enemy
 			triangle[i].body.collides(squareCollisionGroup, this.killShape, this);
 			circle[i].body.collides(triangleCollisionGroup, this.killShape, this);
 			square[i].body.collides(circleCollisionGroup, this.killShape, this);
@@ -148,14 +158,25 @@ First_Level.prototype = {
 		//adds the cooldown text to the game
 		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
 		cooldown.anchor.setTo(.5);
+		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Arial', fill: '#ffffff'});
+		levelcomplete.anchor.setTo(.5);
+		cooldown.fixedToCamera = true;
+		levelcomplete.fixedToCamera = true;
+
 
 	},
 
 	update: function() {
 	// checks if player is destroyed before running these
+		//cheatcodes for testings
+	var pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+	if (pKey.justDown){
+		this.nextLevel();
+	}
 		if (!player.destroyed){
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
+			// console.log('player is not destroyed, shape movement should run.');
 			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
 			this.shapeMovement(circle, 'circle', 'square', 'triangle');
 			this.shapeMovement(square, 'square', 'triangle', 'circle');
@@ -178,9 +199,14 @@ First_Level.prototype = {
 		game.world.bringToTop(overlay);
 
 		//brings the cooldown text to the top of the screen and moves it
-		cooldown.fixedToCamera = true;
+	
     	cooldown.cameraOffset.setTo(game.width/2, game.height - 18);
 		game.world.bringToTop(cooldown);
+    	levelcomplete.cameraOffset.setTo(game.width/2, 200);
+		game.world.bringToTop(levelcomplete);
+		//position chart HUD
+		chart.cameraOffset.setTo(45,game.height-23);
+		game.world.bringToTop(chart);
 
 		//changes the text of the cooldown dependant on the player's state
 		if (player.cooldownLeft < .1){
@@ -201,15 +227,16 @@ First_Level.prototype = {
 	},
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
+		//console.log('player.shapeType() = '+player.shapeType());
 		type.forEach( enemyloop = function(enemy){
 			//how quickly a shape runs away
-			var fleeSpeed = 220;
+			var fleeSpeed = 190;
 			//how quickly a shape runs toward the player aggresively
-			var angerSpeed = 240;
+			var angerSpeed = 210;
 			//how quickly a shape follows the player
 			var followSpeed = 150;
 			//how close a shape has to be to "see" the player shape and react
-			var sightRange = 10;
+			var sightRange = 420;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 200;
 			//how quickly enemy color changes to reflect how the feel about your shape type
@@ -218,6 +245,9 @@ First_Level.prototype = {
 			var playerShapeDist = Phaser.Math.distance(player.body.x, player.body.y, enemy.body.x, enemy.body.y);
 			//withinSightRange bool returns true if a shape can see a player
 			var shapeCanSeePlayer = playerShapeDist <= sightRange;
+			if (!shapeCanSeePlayer){
+				enemy.tint = Phaser.Color.WHITE;
+			}
 			//variable to set volume to play sound effect at, increases value with proximity
 			var soundVol = (sightRange - playerShapeDist) /1000;
 			if (soundVol > .6){
@@ -320,6 +350,7 @@ First_Level.prototype = {
 			}
 			//shape runs at the player, wanting to collide with the player
 			else if (player.shapeType() == strong || player.shapeType() == 'x'){
+				// console.log('player.shapeType() = '+player.shapeType()+ "strong: "+ strong);
 				if(shapeCanSeePlayer){
 					shapeSound(anger);
 					enemy.tint = Phaser.Color.RED;
@@ -381,6 +412,19 @@ First_Level.prototype = {
 					soundVol = .6;
 		}
 		poofArray[rng].play(null, 0, soundVol, false, false);
+		alive[weak.shapetype] --;
+		levelcomplete.alpha = 1;
+		if (alive[weak.shapetype] == 0){
+			alive.wincondition++;
+			levelcomplete.setText('All '+ weak.shapetype+'s eliminated!');
+			if (alive.wincondition > 1){
+				levelcomplete.setText('Level Complete!');
+				game.time.events.add(Phaser.Timer.SECOND * 2, function() { game.state.start('Second_Level')});
+			}
+		}else{
+			levelcomplete.setText(alive[weak.shapetype]+' '+ weak.shapetype+'s remaining');
+		}
+		game.time.events.add(2000, function() { game.add.tween(levelcomplete).to({alpha: 0}, 1500, Phaser.Easing.Linear.None, true);}, this)
 
 		//creates particles for the death of the shape
 		this.createParticles(weak, true);
@@ -399,5 +443,10 @@ First_Level.prototype = {
 		player.kill();
 		//restarts the level after we see the particle explosion of the player
 		game.time.events.add(Phaser.Timer.SECOND * 2, function() { game.state.start('First_Level')});
+	},
+	nextLevel: function(){
+		//for when the player runs into the ending block
+		//music.stop();
+		game.state.start('Second_Level');
 	}
 }
