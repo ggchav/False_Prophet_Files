@@ -88,6 +88,8 @@ First_Level.prototype = {
 		overlay = game.add.image(0, 0, 'overlay');
 		overlay.scale.x = .7;
 		overlay.scale.y = .7;
+
+		//adds charts to the overlay for reference
 		chart = game.add.image(1300, 575, 'spritesheet', 'disguisechart');
 		chart.anchor.set(.5);
 		chart.scale.x = .25;
@@ -155,7 +157,7 @@ First_Level.prototype = {
 		//neccessary for the collisions of p2
 		game.physics.p2.updateBoundsCollisionGroup();
 
-		//adds the cooldown text to the game
+		//adds the cooldown and level completion text to the game
 		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		cooldown.anchor.setTo(.5);
 		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Cabin Sketch', fill: '#ffffff'});
