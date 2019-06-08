@@ -9,7 +9,6 @@ var cooldown;
 var levelcomplete;
 var enemycount = 4;
 var alive;
-var chart;
 //create a shape array that represents the remaining shapes alive, and a counter for each shape
 
 //creates collisionc groups for p2 interactions
@@ -90,11 +89,20 @@ Second_Level.prototype = {
 		overlay.scale.y = .7;
 
 		//adds charts to the overlay for reference
-		chart = game.add.image(1300, 575, 'spritesheet', 'disguisechart');
+		var chart = game.add.image(0, 0, 'spritesheet', 'disguisechart');
 		chart.anchor.set(.5);
 		chart.scale.x = .25;
 		chart.scale.y = .25;
 		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(45, game.height - 23);
+		game.world.bringToTop(chart);
+		chart = game.add.image(0, 0, 'spritesheet', 'trianglechart');
+		chart.anchor.set(.5);
+		chart.scale.x = .25;
+		chart.scale.y = .25;
+		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(660, game.height - 35);
+		game.world.bringToTop(chart);
 
 		//fixes the overlay to the camera
 		overlay.fixedToCamera = true;

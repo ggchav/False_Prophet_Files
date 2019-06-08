@@ -65,7 +65,7 @@ MainMenu.prototype = {
 
 		//sends the player to the tutorial state
 		//game.state.start('Tutorial');
-		game.state.start('Tutorial');
+		game.state.start('First_Level');
 	}
 
 }
