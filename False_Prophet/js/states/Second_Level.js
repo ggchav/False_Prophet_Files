@@ -101,7 +101,7 @@ Second_Level.prototype = {
 		game.camera.follow(player);
 //declares all barriers used for the level
 		for (i = 0; i < 3; i++){
-			barrier = new Barrier(game, (i * 250), 500, 90);
+			barrier = new Barrier(game, 125 + (i * 250), 500, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
@@ -122,11 +122,11 @@ Second_Level.prototype = {
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-				barrier = new Barrier(game, 250 + (i * 250), 964, 90);
+				barrier = new Barrier(game, 375 + (i * 250), 964, 90);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-				barrier = new Barrier(game, 642, 605 + (i * 250), 0);
+				barrier = new Barrier(game, 767, 605 + (i * 250), 0);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
@@ -144,7 +144,7 @@ Second_Level.prototype = {
 			}
 
 			if(i == 0){
-				barrier = new Barrier(game, 140, 825, 0);
+				barrier = new Barrier(game, 265, 825, 0);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
@@ -169,7 +169,7 @@ Second_Level.prototype = {
 
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
 		for (i = 0; i < 4; i++){
-			triangle[i] = new Enemy(game, 250 + (i * 100), 800, 'triangle');
+			triangle[i] = new Enemy(game, 375 + (i * 100), 800, 'triangle');
 			circle[i] = new Enemy(game, 1250 + (i * 200), 250, 'circle');
 			square[i] = new Enemy(game, 1250 + (i * 200), 1800, 'square');
 
