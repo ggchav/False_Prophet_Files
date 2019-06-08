@@ -156,9 +156,9 @@ First_Level.prototype = {
 		game.physics.p2.updateBoundsCollisionGroup();
 
 		//adds the cooldown text to the game
-		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
+		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		cooldown.anchor.setTo(.5);
-		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Arial', fill: '#ffffff'});
+		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		levelcomplete.anchor.setTo(.5);
 		cooldown.fixedToCamera = true;
 		levelcomplete.fixedToCamera = true;
