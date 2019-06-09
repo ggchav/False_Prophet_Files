@@ -29,20 +29,7 @@ var First_Level = function(game){};
 First_Level.prototype = {
 
 	create: function() {
-		//this.init();
-		this.restart();
-	},
-	init: function() {
-		console.log("init runs");
-		this.restart();
-	},
-	shutdown: function(){
-		console.log('shutting down with a restart');
-		this.restart();
-		//player = null;
-	},
-	restart: function(){
-		//set the bounds of the level
+				//set the bounds of the level
 		game.world.setBounds(0, 0, 2000, 2000);
 
 		//load sounds into arrays
@@ -101,22 +88,8 @@ First_Level.prototype = {
 		overlay = game.add.image(0, 0, 'overlay');
 		overlay.scale.x = .7;
 		overlay.scale.y = .7;
+		
 
-		//adds charts to the overlay for reference
-		var chart = game.add.image(0, 0, 'spritesheet', 'disguisechart');
-		chart.anchor.set(.5);
-		chart.scale.x = .25;
-		chart.scale.y = .25;
-		chart.fixedToCamera = true;
-		chart.cameraOffset.setTo(45, game.height - 23);
-		game.world.bringToTop(chart);
-		chart = game.add.image(0, 0, 'spritesheet', 'trianglechart');
-		chart.anchor.set(.5);
-		chart.scale.x = .25;
-		chart.scale.y = .25;
-		chart.fixedToCamera = true;
-		chart.cameraOffset.setTo(660, game.height - 35);
-		game.world.bringToTop(chart);
 
 		//fixes the overlay to the camera
 		overlay.fixedToCamera = true;
@@ -186,6 +159,24 @@ First_Level.prototype = {
 		levelcomplete.anchor.setTo(.5);
 		cooldown.fixedToCamera = true;
 		levelcomplete.fixedToCamera = true;
+		game.world.bringToTop(overlay);
+		//adds charts to the overlay for easier player reference
+		var chart = game.add.image(0, 0, 'spritesheet', 'disguisechart');
+		chart.anchor.set(.5);
+		chart.scale.x = .25;
+		chart.scale.y = .25;
+		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(45, game.height - 23);
+		game.world.bringToTop(chart);
+		chart = game.add.image(0, 0, 'trianglechart');
+		chart.anchor.set(.5);
+		chart.scale.x = .35;
+		chart.scale.y = .35;
+		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(645, game.height - 45);
+		game.world.bringToTop(chart);
+	},
+	shutdown: function(){
 	},
 	update: function() {
 	// checks if player is destroyed before running these
@@ -218,7 +209,6 @@ First_Level.prototype = {
 		
 		//not a great solution, but if player is always set to the collide, changing the body type and shape won't phase it
 		player.body.setCollisionGroup(playerCollisionGroup);
-		game.world.bringToTop(overlay);
 
 		//brings the cooldown text to the top of the screen and moves it
 	
@@ -423,7 +413,7 @@ First_Level.prototype = {
 	//kills a shape on impact with the opposing shape
 	killShape: function(strong, weak){
 		var rng = Math.floor(Math.random()*3);
-
+		weak.destroyed = true;
 		//calls the puffsound array for that sound type[picksrandom] play passes soundVol
 		var shapeDist = Phaser.Math.distance(player.body.x, player.body.y, weak.sprite.body.x, weak.sprite.body.y);
 		var soundVol = (500 - shapeDist)/1000;
@@ -454,14 +444,16 @@ First_Level.prototype = {
 	
 	killPlayer: function(playershape, enemyshape){
 		//kills the player when collided with any shape
-		this.createParticles(player, false);
-		player.animations.stop();
-		var rng = Math.floor(Math.random()*3);
-		poofArray[rng].play(null, 0, 1, false, false);
-		player.destroyed = true;
-		player.kill();
-		//restarts the level after we see the particle explosion of the player
-		game.time.events.add(Phaser.Timer.SECOND * 2, function() { game.state.start('First_Level')});
+		if (!player.destroyed){
+			this.createParticles(player, false);
+			player.animations.stop();
+			var rng = Math.floor(Math.random()*3);
+			poofArray[rng].play(null, 0, 1, false, false);
+			player.destroyed = true;
+			player.kill();
+			//restarts the level after we see the particle explosion of the player
+			game.time.events.add(Phaser.Timer.SECOND * 2, function() { game.state.start('First_Level')});
+		}
 	},
 	nextLevel: function(){
 		//for when the player runs into the ending block

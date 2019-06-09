@@ -26,7 +26,7 @@ Tutorial.prototype = {
 
 	create: function() {
 		//set the bounds of the level
-		game.world.setBounds(0, 0, 4000, 800);
+		game.world.setBounds(0, 0, 4500, 800);
 
 		//load sounds into arrays
 		for (i = 1; i < 6; i++){
@@ -132,9 +132,11 @@ Tutorial.prototype = {
 		chart.anchor.set(.5);
 		chart = game.add.image(1300, 575, 'spritesheet', 'disguisechart');
 		chart.anchor.set(.5);
-		chart = game.add.image(1750, 575, 'spritesheet', 'moodchart');
+		chart = game.add.image(1750, 575, 'moodchart');
 		chart.anchor.set(.5);
-		chart = game.add.image(2700, 575, 'spritesheet', 'trianglechart');
+		chart = game.add.image(2700, 575, 'trianglechart');
+		chart.anchor.set(.5);
+		chart = game.add.image(3520, 575, 'warning');
 		chart.anchor.set(.5);
 		chart = game.add.image(3050, 575, 'spritesheet', 'goalchart');
 		chart.scale.x = .5;
@@ -142,7 +144,7 @@ Tutorial.prototype = {
 		chart.anchor.set(.5);
 
 		//sets up the ending block that will allow the player to continue to the levels
-		var ending = game.add.sprite(3750, 400, 'spritesheet', 'level1');;
+		var ending = game.add.sprite(4000, 400, 'spritesheet', 'level1');;
 		game.physics.p2.enable(ending, false);
 		ending.body.static = true;
 		ending.body.clearShapes();
@@ -244,8 +246,6 @@ Tutorial.prototype = {
 		else{
 			cooldown.setText("Disguise disappears in " + player.disguiseLeft);
 		}
-		
-		
 		
 	},
 	shapeMovement: function(type, same, weak, strong){

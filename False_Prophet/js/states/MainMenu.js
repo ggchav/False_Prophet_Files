@@ -14,6 +14,9 @@ MainMenu.prototype = {
  		game.load.image('triangle', 'triangle0.png');
  		game.load.image('square', 'square0.png');
  		game.load.image('circle', 'circle0.png');
+ 		game.load.image('moodchart', 'moodchart.png');
+ 		game.load.image('warning', 'warningtext.png');
+ 		game.load.image('trianglechart', 'trianglechart.png');
 
  		game.load.physics('spritephysics', 'spritephysics.json')
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
