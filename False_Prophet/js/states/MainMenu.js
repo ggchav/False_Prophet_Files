@@ -1,3 +1,4 @@
+var music;
 var MainMenu = function(game){};
 
 MainMenu.prototype = {
@@ -17,6 +18,7 @@ MainMenu.prototype = {
  		game.load.image('moodchart', 'moodchart.png');
  		game.load.image('warning', 'warningtext.png');
  		game.load.image('trianglechart', 'trianglechart.png');
+ 		game.load.image('credits', 'credits.png');
 
  		game.load.physics('spritephysics', 'spritephysics.json')
 		game.load.atlasJSONHash('spritesheet', 'spritesheet.png', 'sprites.json');
@@ -26,6 +28,7 @@ MainMenu.prototype = {
 		game.load.audio('music','music.mp3');
 		game.load.audio('tutmusic','tutmusic.mp3');
 		game.load.audio('transform','changepoof.mp3');
+		game.load.audio('endsound','endsound.mp3');
 		for (i = 0; i < 3; i++) {
 			game.load.audio('poof' + i, ['deathpoof' + i + '.mp3']);
 		}
@@ -46,7 +49,12 @@ MainMenu.prototype = {
 		var menu = game.add.image(0, 0, 'menu');
 		menu.scale.x *= .5;
 		menu.scale.y *= .5;
-
+		if (!music){
+			music = game.add.audio('music');
+		}
+		if (!music.isPlaying){
+			music.play(null, 0,.37,true);
+		}
 		//adds instructions to continue that fades in and out on the screen
 		var startspace = game.add.image(game.world.centerX, 575, 'spritesheet', 'startspace');
 		startspace.scale.x *= .5;
@@ -69,6 +77,9 @@ MainMenu.prototype = {
 		//sends the player to the tutorial state
 		//game.state.start('Tutorial');
 		game.state.start('Tutorial');
-	}
+	},
+	shutdown: function(){
+		music.stop();
+	},
 
 }

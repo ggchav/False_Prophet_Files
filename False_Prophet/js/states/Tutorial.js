@@ -153,26 +153,31 @@ Tutorial.prototype = {
 		ending.body.collides(playerCollisionGroup);
 
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
-		for (i = 0; i < 2; i++){
+		for (i = 0; i < 3; i++){
 			if(i == 0){
 				triangle[i] = new Enemy(game, 1100, 300, 'triangle');
 				circle[i] = new Enemy(game, 1500, 300, 'circle');
 				square[i] = new Enemy(game, 1900, 300, 'square');
 			}
-			else{
+			if(i == 1){
 				triangle[i] = new Enemy(game, 2600, 300, 'triangle');
 				circle[i] = new Enemy(game, 2800, 300, 'circle');
 				square[i] = new Enemy(game, 2900, 300, 'square');
 			}
-
+			if(i == 2){
+				triangle[i] = new Enemy(game, 2600, 400, 'triangle');
+				circle[i] = new Enemy(game, 2800, 400, 'circle');
+				square[i] = new Enemy(game, 2900, 400, 'square');
+			}
+			//assign to a collision group
 			triangle[i].body.setCollisionGroup(triangleCollisionGroup);
 			circle[i].body.setCollisionGroup(circleCollisionGroup);
 			square[i].body.setCollisionGroup(squareCollisionGroup);
-
+			//tell them what function to run when colliding with this group
 			triangle[i].body.collides(squareCollisionGroup, this.killShape, this);
 			circle[i].body.collides(triangleCollisionGroup, this.killShape, this);
 			square[i].body.collides(circleCollisionGroup, this.killShape, this);
-
+			//which objects they should collide with in p2
 			triangle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup, barrierCollisionGroup]);
 			circle[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup, barrierCollisionGroup]);
 			square[i].body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup, barrierCollisionGroup]);

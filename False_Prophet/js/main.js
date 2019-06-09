@@ -1,6 +1,7 @@
 //Team 25
 //Names: Garrett Chavez, David Hunt, and Jordan Lee
 //Link to github: https://github.com/ggchav/False_Prophet_Files.git
+'use strict';
 var game = new Phaser.Game(700, 700, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
 //initialize all states

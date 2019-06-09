@@ -63,14 +63,14 @@ First_Level.prototype = {
 		if (!music){
 			music = game.add.audio('music');
 		}
-
+		
 		// add music if it's not already playing
 		if (!music.isPlaying){
 			music.play(null, 0,.37,true);
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 500, 1000, 9, 5);
+		player = new Player(game, 500, 1000, 10, 6);
 
 		//reset player shape type
 		player.reset(false);
@@ -189,7 +189,6 @@ First_Level.prototype = {
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
 			// console.log('player is not destroyed, shape movement should run.');
-			console.log('player:'+player);
 			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
 			this.shapeMovement(circle, 'circle', 'square', 'triangle');
 			this.shapeMovement(square, 'square', 'triangle', 'circle');
@@ -239,13 +238,13 @@ First_Level.prototype = {
 
 		type.forEach( enemyloop = function(enemy){
 			//how quickly a shape runs away
-			var fleeSpeed = 190;
+			var fleeSpeed = 180;
 			//how quickly a shape runs toward the player aggresively
-			var angerSpeed = 210;
+			var angerSpeed = 195;
 			//how quickly a shape follows the player
-			var followSpeed = 150;
+			var followSpeed = 140;
 			//how close a shape has to be to "see" the player shape and react
-			var sightRange = 420;
+			var sightRange = 470;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 200;
 			//how quickly enemy color changes to reflect how the feel about your shape type

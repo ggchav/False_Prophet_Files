@@ -69,7 +69,7 @@ Second_Level.prototype = {
 		}
 
 		//create the player from the prefab
-		player = new Player(game, 300, 300, 9, 5);
+		player = new Player(game, 300, 300, 10, 6);
 
 		//reset player shape type
 		player.reset(false);
@@ -281,13 +281,13 @@ Second_Level.prototype = {
 		//console.log('player.shapeType() = '+player.shapeType());
 		type.forEach( enemyloop = function(enemy){
 			//how quickly a shape runs away
-			var fleeSpeed = 190;
+			var fleeSpeed = 180;
 			//how quickly a shape runs toward the player aggresively
-			var angerSpeed = 210;
+			var angerSpeed = 195;
 			//how quickly a shape follows the player
-			var followSpeed = 150;
+			var followSpeed = 140;
 			//how close a shape has to be to "see" the player shape and react
-			var sightRange = 420;
+			var sightRange = 470;
 			//the approximate proximity following shapes will go before they stop moving toward player
 			var followDist = 200;
 			//how quickly enemy color changes to reflect how the feel about your shape type
@@ -497,10 +497,10 @@ Second_Level.prototype = {
 			game.time.events.add(Phaser.Timer.SECOND * 2, function() { game.state.start('Second_Level')});
 		}
 	},
+	shutdown: function(){
+		music.stop();
+	},
 	nextLevel: function(){
-		//for when the player runs into the ending block
-		//music.stop();
-		//game.state.clearCurrentState();
 		game.state.start('EndGame');
 	}
 }

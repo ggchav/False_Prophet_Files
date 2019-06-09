@@ -9,6 +9,7 @@ var levelcomplete;
 var bottomtext;
 var enemycount = 4;
 var alive;
+var credits = false;
 //create a shape array that represents the remaining shapes alive, and a counter for each shape
 var triangleCollisionGroup;
 var squareCollisionGroup;
@@ -61,10 +62,8 @@ EndGame.prototype = {
 			music = game.add.audio('music');
 		}
 
-		// add music if it's not already playing
-		if (!music.isPlaying){
-			//music.play(null, 0,.37,true);
-		}
+		endsound = game.add.audio('endsound');
+		endsound.play(null,0,.6);
 
 		//create the player from the prefab
 		player = new Player(game, 500, 500, 1, 1,40);
@@ -91,11 +90,11 @@ EndGame.prototype = {
 
 		//makes the camera follow the player
 		game.camera.follow(player);
-		game.camera.scale.x = 2;
-		game.camera.scale.y = 2;
+		game.camera.scale.x = 2.4;
+		game.camera.scale.y = 2.4;
 
 		//declares all barriers used for the level
-		var step = 2*Math.PI/30;
+		var step = 1*Math.PI/30;
 		var h = 500; 
 		var k = 500;
 		var r = 210;
@@ -107,9 +106,9 @@ EndGame.prototype = {
 			var y = k - r*Math.sin(theta);    //note 2.
 			var rng = [];
 			var rngtype = [];
-			rng[0] = (Math.random()*5);
-			rng[1] = 5+(Math.random()*10);
-			rng[2] = 5+(Math.random()*10);
+			rng[0] = (Math.random()*15);
+			rng[1] = 5+(Math.random()*30);
+			rng[2] = 5+(Math.random()*40);
 			rngtype[0] =  Phaser.ArrayUtils.getRandomItem(types);
 			rngtype[1] =  Phaser.ArrayUtils.getRandomItem(types);
 			rngtype[2] =  Phaser.ArrayUtils.getRandomItem(types);
@@ -153,14 +152,23 @@ EndGame.prototype = {
 	update: function() {
 	// checks if player is destroyed before running these
 		//cheatcodes for testings
+	if (credits){
+		game.time.events.add(Phaser.Timer.SECOND * 6, function() {window.location.reload(false);});
+		credits = false;
+		music.play(null, 0,.37,true);
+	}
 	var pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
 	if (pKey.justDown){
-		this.nextLevel();
-	}
+		this.killPlayer();
+	}	
 		if (!player.destroyed){
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
-			// console.log('player is not destroyed, shape movement should run.');
+			//zoom out if not at scale 1
+			if (game.camera.scale.x > 1){
+				game.camera.scale.x -= .0016;
+				game.camera.scale.y -= .0016;
+			}
 			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
 			this.shapeMovement(circle, 'circle', 'square', 'triangle');
 			this.shapeMovement(square, 'square', 'triangle', 'circle');
@@ -311,12 +319,10 @@ EndGame.prototype = {
 		//player.destroy();
 		//restarts the level after we see the particle explosion of the player
 		//game.state.clearCurrentState();
-		game.time.events.add(Phaser.Timer.SECOND * 3, this.nextLevel());
+		game.camera.fade('#000000',3500);﻿
+		game.time.events.add(Phaser.Timer.SECOND * 4, function() {game.camera.scale.x = 1; game.camera.scale.y = 1; levelcomplete.kill(); bottomtext.kill(); game.camera.flash('#000000',2500); overlay = game.add.image(0,0, 'credits');  overlay.scale.x =.51; overlay.fixedToCamera = true; overlay.scale.y =.51; credits = true; });
 	},
 	shutdown: function(){
 		player = new Player(game, 500, 1000, 9, 5);
 	},
-		nextLevel: function(){
-		window.location.reload(false); 
-	}
 }
