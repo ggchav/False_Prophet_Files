@@ -1,9 +1,9 @@
 var shapeType = 'x';
 var transformSound;
-
+var playerSpeed = 270;
 var animateSpeed = 500; // 500 milliseconds
 
-Player = function (game, x, y, cooldownLength, disguiseLength){
+Player = function (game, x, y, cooldownLength, disguiseLength, speed){
 	
 	Phaser.Sprite.call(this, game, x, y, 'spritesheet');
 	transformSound = game.add.audio('transform');
@@ -26,6 +26,9 @@ Player = function (game, x, y, cooldownLength, disguiseLength){
 	this.disguiseLeft = 0;
 	this.cooldownDuration = cooldownLength;
 	this.disguiseDuration = disguiseLength;
+	if (speed){
+		playerSpeed = speed;
+	}
 
 	//gets rid of current bounding box
     this.body.clearShapes();
@@ -129,7 +132,7 @@ Player.prototype.createParticles = function(color){
 
 Player.prototype.update = function() {
 	//initialize the player movement if not moving
-	var playerSpeed = 270;
+	
 	//reset speed if not moving
 	//this.body.velocity.x = 0;
 	//this.body.velocity.y = 0;

@@ -489,6 +489,7 @@ Second_Level.prototype = {
 	nextLevel: function(){
 		//for when the player runs into the ending block
 		//music.stop();
+		//game.state.clearCurrentState();
 		game.state.start('EndGame');
 	}
 }

@@ -30,6 +30,19 @@ var First_Level = function(game){};
 First_Level.prototype = {
 
 	create: function() {
+		//this.init();
+		this.restart();
+	},
+	init: function() {
+		console.log("init runs");
+		this.restart();
+	},
+	shutdown: function(){
+		console.log('shutting down with a restart');
+		this.restart();
+		//player = null;
+	},
+	restart: function(){
 		//set the bounds of the level
 		game.world.setBounds(0, 0, 2000, 2000);
 
@@ -55,7 +68,8 @@ First_Level.prototype = {
     	squareCollisionGroup = game.physics.p2.createCollisionGroup();
     	circleCollisionGroup = game.physics.p2.createCollisionGroup();
     	barrierCollisionGroup = game.physics.p2.createCollisionGroup();
-		
+		game.camera.scale.x = 1;
+		game.camera.scale.y = 1;
 		//initialize the tilesprite for the background
 		background = game.add.tileSprite(0, 0, 700, 700, 'background');
 		
@@ -162,10 +176,7 @@ First_Level.prototype = {
 		levelcomplete.anchor.setTo(.5);
 		cooldown.fixedToCamera = true;
 		levelcomplete.fixedToCamera = true;
-
-
 	},
-
 	update: function() {
 	// checks if player is destroyed before running these
 		//cheatcodes for testings
@@ -177,6 +188,7 @@ First_Level.prototype = {
 			//follows though the different shape/player interactions
 			//(shape, same, weak, strong)
 			// console.log('player is not destroyed, shape movement should run.');
+			console.log('player:'+player);
 			this.shapeMovement(triangle, 'triangle', 'circle', 'square');
 			this.shapeMovement(circle, 'circle', 'square', 'triangle');
 			this.shapeMovement(square, 'square', 'triangle', 'circle');
@@ -227,7 +239,7 @@ First_Level.prototype = {
 	},
 	shapeMovement: function(type, same, weak, strong){
 		//repeat for the provided shape
-		//console.log('player.shapeType() = '+player.shapeType());
+
 		type.forEach( enemyloop = function(enemy){
 			//how quickly a shape runs away
 			var fleeSpeed = 190;
@@ -424,7 +436,7 @@ First_Level.prototype = {
 		}else{
 			levelcomplete.setText(alive[weak.shapetype]+' '+ weak.shapetype+'s remaining');
 		}
-		game.time.events.add(2000, function() { game.add.tween(levelcomplete).to({alpha: 0}, 1500, Phaser.Easing.Linear.None, true);}, this)
+		game.time.events.add(0, function() { game.add.tween(levelcomplete).to({alpha: 0}, 1500, Phaser.Easing.Linear.None, true);}, this);
 
 		//creates particles for the death of the shape
 		this.createParticles(weak, true);
@@ -447,6 +459,8 @@ First_Level.prototype = {
 	nextLevel: function(){
 		//for when the player runs into the ending block
 		//music.stop();
-		game.state.start('Second_Level');
+		//game.state.clearCurrentState();
+		game.state.start("Second_Level");
+		//game.state.start('Second_Level');
 	}
 }
