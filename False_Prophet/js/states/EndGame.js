@@ -136,10 +136,10 @@ EndGame.prototype = {
 		//neccessary for the collisions of p2
 		game.physics.p2.updateBoundsCollisionGroup();
 
-		levelcomplete = game.add.text(game.width/2, 100, 'Divided we are weak...', {font: '30px Arial', fill: '#ffffff'});
+		levelcomplete = game.add.text(game.width/2, 100, 'Divided we are weak...', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		levelcomplete.anchor.setTo(.5);
 		levelcomplete.fixedToCamera = true;
-		bottomtext = game.add.text(game.width/2, 200, 'Together, we are strong.', {font: '30px Arial', fill: '#ffffff'});
+		bottomtext = game.add.text(game.width/2, 200, 'Together, we are strong.', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		bottomtext.anchor.setTo(.5);
 		bottomtext.fixedToCamera = true;
 		bottomtext.alpha = 0;
