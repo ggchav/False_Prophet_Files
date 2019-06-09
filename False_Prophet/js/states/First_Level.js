@@ -9,7 +9,6 @@ var cooldown;
 var levelcomplete;
 var enemycount = 4;
 var alive;
-var chart;
 //create a shape array that represents the remaining shapes alive, and a counter for each shape
 
 //creates collisionc groups for p2 interactions
@@ -102,11 +101,22 @@ First_Level.prototype = {
 		overlay = game.add.image(0, 0, 'overlay');
 		overlay.scale.x = .7;
 		overlay.scale.y = .7;
-		chart = game.add.image(1300, 575, 'spritesheet', 'disguisechart');
+
+		//adds charts to the overlay for reference
+		var chart = game.add.image(0, 0, 'spritesheet', 'disguisechart');
 		chart.anchor.set(.5);
 		chart.scale.x = .25;
 		chart.scale.y = .25;
 		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(45, game.height - 23);
+		game.world.bringToTop(chart);
+		chart = game.add.image(0, 0, 'spritesheet', 'trianglechart');
+		chart.anchor.set(.5);
+		chart.scale.x = .25;
+		chart.scale.y = .25;
+		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(660, game.height - 35);
+		game.world.bringToTop(chart);
 
 		//fixes the overlay to the camera
 		overlay.fixedToCamera = true;
@@ -169,10 +179,10 @@ First_Level.prototype = {
 		//neccessary for the collisions of p2
 		game.physics.p2.updateBoundsCollisionGroup();
 
-		//adds the cooldown text to the game
-		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
+		//adds the cooldown and level completion text to the game
+		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		cooldown.anchor.setTo(.5);
-		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Arial', fill: '#ffffff'});
+		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		levelcomplete.anchor.setTo(.5);
 		cooldown.fixedToCamera = true;
 		levelcomplete.fixedToCamera = true;
@@ -216,9 +226,6 @@ First_Level.prototype = {
 		game.world.bringToTop(cooldown);
     	levelcomplete.cameraOffset.setTo(game.width/2, 200);
 		game.world.bringToTop(levelcomplete);
-		//position chart HUD
-		chart.cameraOffset.setTo(45,game.height-23);
-		game.world.bringToTop(chart);
 
 		//changes the text of the cooldown dependant on the player's state
 		if (player.cooldownLeft < .1){

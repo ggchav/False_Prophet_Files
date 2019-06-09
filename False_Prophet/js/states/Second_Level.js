@@ -9,7 +9,6 @@ var cooldown;
 var levelcomplete;
 var enemycount = 4;
 var alive;
-var chart;
 //create a shape array that represents the remaining shapes alive, and a counter for each shape
 
 //creates collisionc groups for p2 interactions
@@ -88,11 +87,22 @@ Second_Level.prototype = {
 		overlay = game.add.image(0, 0, 'overlay');
 		overlay.scale.x = .7;
 		overlay.scale.y = .7;
-		chart = game.add.image(1300, 575, 'spritesheet', 'disguisechart');
+
+		//adds charts to the overlay for reference
+		var chart = game.add.image(0, 0, 'spritesheet', 'disguisechart');
 		chart.anchor.set(.5);
 		chart.scale.x = .25;
 		chart.scale.y = .25;
 		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(45, game.height - 23);
+		game.world.bringToTop(chart);
+		chart = game.add.image(0, 0, 'spritesheet', 'trianglechart');
+		chart.anchor.set(.5);
+		chart.scale.x = .25;
+		chart.scale.y = .25;
+		chart.fixedToCamera = true;
+		chart.cameraOffset.setTo(660, game.height - 35);
+		game.world.bringToTop(chart);
 
 		//fixes the overlay to the camera
 		overlay.fixedToCamera = true;
@@ -101,7 +111,7 @@ Second_Level.prototype = {
 		game.camera.follow(player);
 //declares all barriers used for the level
 		for (i = 0; i < 3; i++){
-			barrier = new Barrier(game, (i * 250), 500, 90);
+			barrier = new Barrier(game, 125 + (i * 250), 500, 90);
 			barrier.body.setCollisionGroup(barrierCollisionGroup);
 			barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
@@ -122,11 +132,11 @@ Second_Level.prototype = {
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-				barrier = new Barrier(game, 250 + (i * 250), 964, 90);
+				barrier = new Barrier(game, 375 + (i * 250), 964, 90);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
-				barrier = new Barrier(game, 642, 605 + (i * 250), 0);
+				barrier = new Barrier(game, 767, 605 + (i * 250), 0);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
@@ -144,7 +154,7 @@ Second_Level.prototype = {
 			}
 
 			if(i == 0){
-				barrier = new Barrier(game, 140, 825, 0);
+				barrier = new Barrier(game, 265, 825, 0);
 				barrier.body.setCollisionGroup(barrierCollisionGroup);
 				barrier.body.collides([triangleCollisionGroup, circleCollisionGroup, squareCollisionGroup, playerCollisionGroup]);
 
@@ -169,7 +179,7 @@ Second_Level.prototype = {
 
 		//creates enemies from prefabs and adds them to their collision group while assigning collision attributes
 		for (i = 0; i < 4; i++){
-			triangle[i] = new Enemy(game, 250 + (i * 100), 800, 'triangle');
+			triangle[i] = new Enemy(game, 375 + (i * 100), 800, 'triangle');
 			circle[i] = new Enemy(game, 1250 + (i * 200), 250, 'circle');
 			square[i] = new Enemy(game, 1250 + (i * 200), 1800, 'square');
 
@@ -197,10 +207,10 @@ Second_Level.prototype = {
 		//neccessary for the collisions of p2
 		game.physics.p2.updateBoundsCollisionGroup();
 
-		//adds the cooldown text to the game
-		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Arial', fill: '#ffffff'});
+		//adds the cooldown and level completion text to the game
+		cooldown = game.add.text(game.width/2, 600, '0', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		cooldown.anchor.setTo(.5);
-		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Arial', fill: '#ffffff'});
+		levelcomplete = game.add.text(game.width/2, 200, '', {font: '30px Cabin Sketch', fill: '#ffffff'});
 		levelcomplete.anchor.setTo(.5);
 		cooldown.fixedToCamera = true;
 		levelcomplete.fixedToCamera = true;

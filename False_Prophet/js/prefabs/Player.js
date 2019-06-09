@@ -39,8 +39,9 @@ Player = function (game, x, y, cooldownLength, disguiseLength, speed){
 	//moves the anchor point to the middle
 	this.anchor.set(0.5);
 
+	//adds damping for the player's movements
 	this.body.angularDamping = .6;
-	this.body.damping = .6;
+	this.body.damping = .95;
 
 	//set player cooldownLeft for shape shifting
 	this.cooldownLeft = 0;
@@ -49,6 +50,7 @@ Player = function (game, x, y, cooldownLength, disguiseLength, speed){
     animTimer.loop(animateSpeed, this.animate, this);
 	animTimer.start();
 	this.animate();
+
 	//adds the shape into the game
 	game.add.existing(this);
 };
@@ -60,17 +62,20 @@ Player.prototype.shapeType = function(){
 	return shapeType;
 }
 Player.prototype.reset = function(animate){
+	//if the player goes back to an x, reset
 	if (animate){
 		this.createParticles(0x181818);
 		transformSound.play();
 	}
-		shapeType = 'x';
-		this.animations.play("x");
-		this.body.clearShapes();
-		this.body.loadPolygon("spritephysics", "x0");
-	//
+
+	//resets the player to an x
+	shapeType = 'x';
+	this.animations.play("x");
+	this.body.clearShapes();
+	this.body.loadPolygon("spritephysics", "x0");
 }
 Player.prototype.startcooldownLeft = function(){
+	//starts the cooldown affect
 	this.cooldownLeft = this.cooldownDuration;
 	this.disguiseLeft = this.disguiseDuration;
 	this.tint = 0x181818;
@@ -78,6 +83,7 @@ Player.prototype.startcooldownLeft = function(){
 	timer.start();
 }
 Player.prototype.updateTimer = function(){
+	//updates the cooldown affect
 	this.cooldownLeft --;
 	this.disguiseLeft --;
 
@@ -90,14 +96,14 @@ Player.prototype.updateTimer = function(){
 	}	
 }
 Player.prototype.animate = function(){
+	//determines the color of the x
 	if (this.cooldownLeft <= 0){
 		var newtint = Math.random() * 0xffffff;
 		this.tweensTint(this, this.tint, newtint,animateSpeed);
-		//console.log("animate function running");
-	} else{
+	}
+	else{
 		this.tint = 0x181818;
 	}
-	//this.tint = Math.random() * 0xffffff;
 	
 }
 Player.prototype.tweensTint = function(spriteobj, startColor, endColor, time) {    // create an object to tween with our step value at 0    
