@@ -157,7 +157,7 @@ EndGame.prototype = {
 		credits = false;
 		music.play(null, 0,.37,true);
 	}
-	var pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+	var pKey = game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_ADD);
 	if (pKey.justDown){
 		this.killPlayer();
 	}	

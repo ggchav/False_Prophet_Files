@@ -63,7 +63,7 @@ First_Level.prototype = {
 		if (!music){
 			music = game.add.audio('music');
 		}
-		
+
 		// add music if it's not already playing
 		if (!music.isPlaying){
 			music.play(null, 0,.37,true);
@@ -181,7 +181,7 @@ First_Level.prototype = {
 	update: function() {
 	// checks if player is destroyed before running these
 		//cheatcodes for testings
-	var pKey = game.input.keyboard.addKey(Phaser.Keyboard.P);
+	var pKey = game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_ADD);
 	if (pKey.justDown){
 		this.nextLevel();
 	}
