@@ -80,14 +80,6 @@ EndGame.prototype = {
 		//fix the camera with the background and make it follow the player
 		background.fixedToCamera = true;
 
-		//adds an overlay to the game and scales
-		overlay = game.add.image(0, 0, 'overlay');
-		overlay.scale.x = .7;
-		overlay.scale.y = .7;
-
-		//fixes the overlay to the camera
-		overlay.fixedToCamera = true;
-
 		//makes the camera follow the player
 		game.camera.follow(player);
 		game.camera.scale.x = 2.4;
@@ -188,7 +180,7 @@ EndGame.prototype = {
 		
 		//not a great solution, but if player is always set to the collide, changing the body type and shape won't phase it
 		player.body.setCollisionGroup(playerCollisionGroup);
-		game.world.bringToTop(overlay);
+
 
 		//brings the cooldown text to the top of the screen and moves it
 
