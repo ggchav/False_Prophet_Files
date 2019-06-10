@@ -34,11 +34,11 @@ MainMenu.prototype = {
 		}
 		for (i = 1; i < 7; i++){
 			var soundtype = "flee";
-			game.load.audio(soundtype + i, [soundtype + i + '.wav']);
+			game.load.audio("flee" + i, ["flee" + i + '.mp3']);
 			soundtype = "anger";
-			game.load.audio(soundtype + i, [soundtype + i + '.wav']);
+			game.load.audio("anger" + i, ["anger" + i + '.mp3']);
 			soundtype = "follow";
-			game.load.audio(soundtype + i, [soundtype + i + '.wav']);
+			game.load.audio("follow" + i, ["follow" + i + '.mp3']);
 
 		}
 	},

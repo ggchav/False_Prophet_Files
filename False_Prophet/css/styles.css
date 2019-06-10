@@ -3,6 +3,11 @@ body {
 	justify-content:center;
 	text-align: center;
 	background-color: black;
-	padding: 10px;
 	font-family: 'Cabin Sketch', cursive;
+}
+canvas,body,html{
+	margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
 }
